@@ -3,6 +3,9 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import Navbar from './components/navbar';
+import Home from './content/Home';
+import Login from './content/Login';
+import Register from './content/Register';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
@@ -15,9 +18,9 @@ function App() {
         
           <Navbar/>
             <Routes>
-              <Route path='/'/>
-              <Route path='/Login'/>
-              <Route path='/Register' />
+              <Route path='/' element={<Home />}/>
+              <Route path='/Login' element={<Login />}/>
+              <Route path='/Register' element={<Register />}/>
               
             </Routes>
         
