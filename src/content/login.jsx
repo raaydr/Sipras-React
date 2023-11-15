@@ -1,24 +1,15 @@
 import React, { useState } from "react";
-import axios from "../api/axios";
-import { useNavigate } from "react-router-dom";
+import useAuthContext from "../context/AuthContext";
 
-const Login = (props) => {
+const Login = () => {
     const [email, setEmail]= useState("");
     const [password, setPassword]= useState("");
-    const navigate = useNavigate();
-    const HandleLogin = async (event) => {
     
+    const {login,errors} = useAuthContext();
+    const data = {email, password};
+    const HandleLogin = async (event) => {
         event.preventDefault()
-        try {
-            await axios.post('/login',{email,password});
-            setEmail("")
-            setPassword("")
-            navigate("/");
-        } catch (error) {
-            console.log(error)
-        }
-        
-        
+        login({ email,password });
     }
     return (
       <div className="container">
@@ -39,6 +30,8 @@ const Login = (props) => {
                 placeholder="name@flowbite.com"
                 required=""
                 />
+                {errors.email && <span style={{ color: 'red' }}>{errors.email}</span>}
+                {errors.error && <span style={{ color: 'red' }}>{errors.error}</span>}
             </div>
             <div className="mb-6">
                 <label
@@ -53,6 +46,8 @@ const Login = (props) => {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required=""
                 />
+                {errors.password && <span style={{ color: 'red' }}>{errors.password}</span>}
+                
             </div>
             <div className="flex items-start mb-6">
                 <div className="flex items-center h-5">
