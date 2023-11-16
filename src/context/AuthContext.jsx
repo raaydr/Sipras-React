@@ -44,6 +44,14 @@ export const AuthProvider =({children}) => {
         }
     }
 
+    const logout = () =>{
+        const token = Cookies.get('tokenku')
+        axios.get('/api/logout',{ headers: {"Authorization" : `Bearer ${token}`} }).then(() =>{
+            setUser(null)
+            }
+        );
+
+    }
     const register = async ({...data}) =>{
         await csrf();
         try {
@@ -61,7 +69,7 @@ export const AuthProvider =({children}) => {
         }
     };
 
-    return <AuthContext.Provider value={{user,errors,getUser,login,register}}>
+    return <AuthContext.Provider value={{user,errors,getUser,login,logout,register}}>
         {children}
     </AuthContext.Provider>
 }

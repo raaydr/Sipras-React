@@ -1,7 +1,9 @@
 import React, { useContext } from 'react'
 import { Link } from "react-router-dom";
+import useAuthContext from "../context/AuthContext";
 const Navbar = () =>{
     
+  const {user,getUser,logout} = useAuthContext();
     return (
   <nav className="bg-white border-gray-200 dark:bg-gray-900">
   <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -20,15 +22,16 @@ const Navbar = () =>{
         <li>
           <Link to="/" className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Home</Link>
         </li>
-        <li>
-        <Link to="/Login"  className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Login</Link>
-        </li>
-        <li>
+        {user?<> <li>
+        <Link onClick={logout}   className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Logout</Link>
+        </li></>:<><li>
         <Link to="/Login"  className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Login</Link>
         </li>
         <li>
         <Link to="/Register"className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Register</Link>
-        </li>
+        </li></>}
+       
+        
       </ul>
     </div>
   </div>

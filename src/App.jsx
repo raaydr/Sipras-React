@@ -3,9 +3,9 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import Navbar from './components/navbar';
-import Home from './content/Home.jsx';
-import Login from './content/Login.jsx';
-import Register from './content/Register.jsx';
+import Home from './content/home.jsx';
+import Login from './content/login.jsx';
+import Register from './content/register.jsx';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
