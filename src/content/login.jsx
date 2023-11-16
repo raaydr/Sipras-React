@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import useAuthContext from "../context/AuthContext";
-
+import Cookies from "js-cookie"
 const Login = () => {
     const [email, setEmail]= useState("");
     const [password, setPassword]= useState("");
     
-    const {login,errors} = useAuthContext();
+    const {regis,setRegis,login,errors} = useAuthContext();
+    useEffect(() => {
+        console.log("regis updated:", regis);
+      }, [regis]);
+    
     const data = {email, password};
     const HandleLogin = async (event) => {
         event.preventDefault()
@@ -13,6 +17,9 @@ const Login = () => {
     }
     return (
       <div className="container">
+       {regis?<><div className="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+  <span className="font-medium">Success alert!</span> {regis} Berhasil Mendaftar, Silahkan Login .
+</div></>:<></>}
        
        <form onSubmit={HandleLogin}>
             <div className="mb-6">

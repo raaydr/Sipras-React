@@ -7,6 +7,7 @@ const AuthContext = createContext({});
 
 export const AuthProvider =({children}) => {
     const[user, setUser] = useState(null);
+    const[regis, setRegis] = useState(null);
     const[tokens, setTokens] = useState("");
 
     const [errors, setErros]= useState([]);
@@ -31,7 +32,7 @@ export const AuthProvider =({children}) => {
             const response = await axios.post('/api/login',data);
             console.log(response.data.data.token)
             Cookies.set('tokenku', response.data.data.token)
-            
+            setRegis(null)
             getUser();
             navigate("/");
         } catch (e) {
@@ -53,11 +54,17 @@ export const AuthProvider =({children}) => {
 
     }
     const register = async ({...data}) =>{
+        
         await csrf();
         try {
             await axios.post('/api/register',data);
-            getUser();
-            navigate("/");
+            
+           
+            setRegis(data.name)
+            setErros([])
+            navigate("/login");
+           
+            
         } catch (e) {
             if(e.response.status === 422){
                 setErros(e.response.data.errors)
@@ -69,7 +76,7 @@ export const AuthProvider =({children}) => {
         }
     };
 
-    return <AuthContext.Provider value={{user,errors,getUser,login,logout,register}}>
+    return <AuthContext.Provider value={{user,errors,regis,getUser,login,logout,register}}>
         {children}
     </AuthContext.Provider>
 }
