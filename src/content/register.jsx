@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import useAuthContext from "../context/AuthContext";
 const Register = () => {
     const [name, setName]= useState("");
@@ -6,7 +6,15 @@ const Register = () => {
     const [password, setPassword]= useState("");
     const [password_confirmation, setPasswordConfirmation]= useState("");
     
-    const {register,errors} = useAuthContext();
+    const {register,errors,setRegis} = useAuthContext();
+    setRegis(null)
+    useEffect(() => {
+        setRegis(null)
+        
+        
+      }, []);
+
+      
     const HandleRegister = async (event) => {
     
         event.preventDefault()

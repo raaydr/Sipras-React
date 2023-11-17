@@ -2,14 +2,17 @@ import { useEffect } from "react";
 import useAuthContext from "../context/AuthContext";
 const Home = () => {
 
-    const {user,getUser} = useAuthContext();
+    const {user,getUser,setRegis} = useAuthContext();
+    
 
     useEffect(() => {
+      setRegis(null)
       if(!user){
         getUser();
         console.log("di Home")
         console.log(user)
       }
+      
     }, []);
     return (
       <div className="container">

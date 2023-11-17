@@ -8,9 +8,8 @@ const AuthContext = createContext({});
 export const AuthProvider =({children}) => {
     const[user, setUser] = useState(null);
     const[regis, setRegis] = useState(null);
-    const[tokens, setTokens] = useState("");
 
-    const [errors, setErros]= useState([]);
+    const [errors, setErrors]= useState([]);
 
     const navigate = useNavigate();
 
@@ -29,6 +28,7 @@ export const AuthProvider =({children}) => {
     const login = async ({...data}) =>{
         await csrf();
         try {
+            setRegis(null)
             const response = await axios.post('/api/login',data);
             console.log(response.data.data.token)
             Cookies.set('tokenku', response.data.data.token)
@@ -37,10 +37,10 @@ export const AuthProvider =({children}) => {
             navigate("/");
         } catch (e) {
             if(e.response.status === 422){
-                setErros(e.response.data.errors)
+                setErrors(e.response.data.errors)
 
             } else if (e.response.status === 404){
-                setErros(e.response.data.data)
+                setErrors(e.response.data.data)
             }
         }
     }
@@ -61,22 +61,22 @@ export const AuthProvider =({children}) => {
             
            
             setRegis(data.name)
-            setErros([])
+            setErrors([])
             navigate("/login");
            
             
         } catch (e) {
             if(e.response.status === 422){
-                setErros(e.response.data.errors)
+                setErrors(e.response.data.errors)
 
             } else if (e.response.status === 404){
-                setErros(e.response.data.data)
+                setErrors(e.response.data.data)
                 console.log(errors)
             }
         }
     };
 
-    return <AuthContext.Provider value={{user,errors,regis,getUser,login,logout,register}}>
+    return <AuthContext.Provider value={{user,errors,regis,setRegis,getUser,login,logout,register}}>
         {children}
     </AuthContext.Provider>
 }
