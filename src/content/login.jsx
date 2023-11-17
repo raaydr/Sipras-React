@@ -1,19 +1,31 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect,useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import useAuthContext from "../context/AuthContext";
 import Cookies from "js-cookie"
 const Login = () => {
     const [email, setEmail]= useState("");
     const [password, setPassword]= useState("");
-    
+    const [recaptchaValue, setRecaptchaValue] = useState(null);
+    const [loginAttempts, setLoginAttempts] = useState(0);
     const {regis,setRegis,login,errors} = useAuthContext();
+    const captcha = useRef(null)
+    const resetCaptcha = () => {
+        // maybe set it till after is submitted
+        captcha.reset();
+    }
     useEffect(() => {
         console.log("regis updated:", regis);
       }, [regis]);
     
-    const data = {email, password};
+    
+    const data = {email, password,recaptchaValue,loginAttempts};
     const HandleLogin = async (event) => {
+       
         event.preventDefault()
-        login({ email,password });
+            login( data );
+            console.log('Login successful');
+            setLoginAttempts(loginAttempts + 1);
+            captcha.current.reset()
     }
     return (
       <div className="container">
@@ -55,6 +67,21 @@ const Login = () => {
                 />
                 {errors.password && <span style={{ color: 'red' }}>{errors.password}</span>}
                 
+            </div>
+            <div>
+            {loginAttempts >= 3 && (
+                <>
+                <ReCAPTCHA
+                ref={captcha}
+                sitekey="6Lef-bUaAAAAABFTIzmUc0A3tLulDqIw3EvCERVs"
+                onChange={(value) => setRecaptchaValue(value)}
+                
+            />
+                </>
+            
+            )}
+            {/* Komponen login Anda di sini */}
+            {errors.recaptchaValue && <span style={{ color: 'red' }}>{errors.recaptchaValue}</span>}
             </div>
             <div className="flex items-start mb-6">
                 <div className="flex items-center h-5">
