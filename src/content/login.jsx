@@ -1,21 +1,17 @@
 import React, { useState,useEffect,useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import useAuthContext from "../context/AuthContext";
-import Cookies from "js-cookie"
 const Login = () => {
     const [email, setEmail]= useState("");
     const [password, setPassword]= useState("");
     const [recaptchaValue, setRecaptchaValue] = useState(null);
     const [loginAttempts, setLoginAttempts] = useState(0);
-    const {regis,setRegis,login,errors} = useAuthContext();
+    const {regis,login,errors,setErrors} = useAuthContext();
     const captcha = useRef(null)
-    const resetCaptcha = () => {
-        // maybe set it till after is submitted
-        captcha.reset();
-    }
     useEffect(() => {
         console.log("regis updated:", regis);
-      }, [regis]);
+        setErrors([])
+      }, []);
     
     
     const data = {email, password,recaptchaValue,loginAttempts};
@@ -23,7 +19,6 @@ const Login = () => {
        
         event.preventDefault()
             login( data );
-            console.log('Login successful');
             setLoginAttempts(loginAttempts + 1);
             captcha.current.reset()
     }

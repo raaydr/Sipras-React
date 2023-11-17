@@ -16,13 +16,15 @@ export const AuthProvider =({children}) => {
     const csrf =()=> axios.get("/sanctum/csrf-cookie")
 
     const getUser = async () => {
-        const token = Cookies.get('tokenku')
-        const data = await axios.get('/api/identify',{ headers: {"Authorization" : `Bearer ${token}`} });
-
-        setUser(data.data.data.name);
-        
-        console.log("di Auth")
-        console.log(data.data.data.name)
+       
+        try {
+            const token = Cookies.get('tokenku')
+            const data = await axios.get('/api/identify',{ headers: {"Authorization" : `Bearer ${token}`} });
+    
+            setUser(data.data.data.name);
+        } catch (e) {
+            setUser(null);
+        }
     }
 
     const login = async ({...data}) =>{
@@ -51,6 +53,7 @@ export const AuthProvider =({children}) => {
             setUser(null)
             }
         );
+        Cookies.set('tokenku', null)
 
     }
     const register = async ({...data}) =>{
@@ -76,7 +79,7 @@ export const AuthProvider =({children}) => {
         }
     };
 
-    return <AuthContext.Provider value={{user,errors,regis,setRegis,getUser,login,logout,register}}>
+    return <AuthContext.Provider value={{user,errors,regis,setRegis,setErrors,getUser,login,logout,register}}>
         {children}
     </AuthContext.Provider>
 }
