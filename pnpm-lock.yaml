@@ -11,6 +11,9 @@ dependencies:
   flowbite:
     specifier: ^2.1.1
     version: 2.1.1
+  flowbite-datepicker:
+    specifier: ^1.2.4
+    version: 1.2.4
   js-cookie:
     specifier: ^3.0.5
     version: 3.0.5
@@ -1392,6 +1395,12 @@ packages:
   /flatted@3.2.9:
     resolution: {integrity: sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==}
     dev: true
+
+  /flowbite-datepicker@1.2.4:
+    resolution: {integrity: sha512-JSH3SNm77jNuui++XpWwYB0cpvz1CCO7EpU+18/mcAkp+/giJphs4vZjTLFmccL3gSF/3IrTyWJdR6CTJ3Kn0w==}
+    dependencies:
+      flowbite: 2.1.1
+    dev: false
 
   /flowbite@2.1.1:
     resolution: {integrity: sha512-FkTwNXlfWRXUhSsiE9D4bEqLN8ywdunW2qOz1z7gN+Co7h9EQIJf/Fr4xgq1NJPFa+6MeMf08QLzviU7LqB/rQ==}
