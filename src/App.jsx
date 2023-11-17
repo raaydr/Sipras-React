@@ -6,6 +6,11 @@ import Navbar from './components/navbar';
 import Home from './content/home.jsx';
 import Login from './content/login.jsx';
 import Register from './content/register.jsx';
+import User from './content/user.jsx';
+
+import AuthLayout from './layout/AuthLayout.jsx';
+import GuestLayout from './layout/GuestLayout.jsx';
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
@@ -18,9 +23,16 @@ function App() {
         
           <Navbar/>
             <Routes>
-              <Route path='/' element={<Home />}/>
-              <Route path='/Login' element={<Login />}/>
-              <Route path='/Register' element={<Register />}/>
+              <Route element={<AuthLayout/>}>
+                <Route path='/' element={<Home />}/>
+                <Route path='/Welcome' element={<User />}/>
+              </Route>
+              <Route element={<GuestLayout/>}>
+                <Route path='/Login' element={<Login />}/>
+                <Route path='/Register' element={<Register />}/>
+              </Route>
+              
+              
               
             </Routes>
         
