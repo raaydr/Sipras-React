@@ -1,6 +1,7 @@
 import React, { useState,useEffect,useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import useAuthContext from "../context/AuthContext";
+import { Link } from "react-router-dom";
 const Login = () => {
     const [email, setEmail]= useState("");
     const [password, setPassword]= useState("");
@@ -94,13 +95,14 @@ const Login = () => {
                 >
                 Remember me
                 </label>
+                <Link to="/Forgotpassword"   className="ms-2 text-sm font-medium text-blue-900 dark:text-blue-300" aria-current="page">Forgot-Password</Link>
             </div>
-            <button
-                type="submit"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-                Submit
-            </button>
+                
+                <button
+                
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Forgot Password
+                </button>
         </form>
 
       </div>

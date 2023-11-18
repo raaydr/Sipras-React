@@ -3,7 +3,7 @@ import useAuthContext from "../context/AuthContext";
 
 const GuestLayout = () => {
     const {user} = useAuthContext();
-
+    console.log(user)
     return !user ? <Outlet/> : <Navigate to ="/"/>
 
 }
