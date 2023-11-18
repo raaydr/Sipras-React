@@ -36,7 +36,7 @@ export const AuthProvider =({children}) => {
             Cookies.set('tokenku', response.data.data.token)
             setRegis(null)
             getUser();
-            navigate("/");
+            navigate("/Welcome");
         } catch (e) {
             if(e.response.status === 422){
                 setErrors(e.response.data.errors)
