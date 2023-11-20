@@ -9,11 +9,12 @@ import AuthLayout from './layout/AuthLayout.jsx';
 import GuestLayout from './layout/GuestLayout.jsx';
 import Home from './content/Home.jsx';
 import Login1 from './content/Login.jsx';
-import Register from './content/Register.jsx';
+import Register1 from './content/Register.jsx';
 import User from './content/User.jsx';
 import Forgotpassword from './content/Forgotpassword.jsx';
 import ResetPassword from './content/ResetPassword.jsx';
 import Login from './content/LoginTest.jsx';
+import Register from './content/RegisterTest.jsx';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
@@ -37,6 +38,7 @@ function App() {
                 <Route path='/Login1' element={<Login1 />}/>
                 <Route path='/Login' element={<Login />}/>
                 <Route path='/Register' element={<Register />}/>
+                <Route path='/Register1' element={<Register1 />}/>
                 <Route path='/Forgotpassword' element={<Forgotpassword />}/>
               </Route>
               
