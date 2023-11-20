@@ -12,9 +12,9 @@ import Login1 from './content/Login.jsx';
 import Register1 from './content/Register.jsx';
 import User from './content/User.jsx';
 import Forgotpassword from './content/Forgotpassword.jsx';
-import ResetPassword from './content/ResetPassword.jsx';
 import Login from './content/LoginTest.jsx';
 import Register from './content/RegisterTest.jsx';
+import ResetPassword from './content/ResetPasswordTest.jsx';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
@@ -33,6 +33,7 @@ function App() {
                 
                 <Route path='/Welcome' element={<User />}/>
                 <Route path='/Reset-Password' element={<ResetPassword />}/>
+                
               </Route>
               <Route element={<GuestLayout/>}>
                 <Route path='/Login1' element={<Login1 />}/>
