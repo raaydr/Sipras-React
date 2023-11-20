@@ -11,10 +11,11 @@ import Home from './content/Home.jsx';
 import Login1 from './content/Login.jsx';
 import Register1 from './content/Register.jsx';
 import User from './content/User.jsx';
-import Forgotpassword from './content/Forgotpassword.jsx';
+import Forgotpassword1 from './content/Forgotpassword.jsx';
 import Login from './content/LoginTest.jsx';
 import Register from './content/RegisterTest.jsx';
 import ResetPassword from './content/ResetPasswordTest.jsx';
+import Forgotpassword from './content/ForgotPasswordTest.jsx';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
