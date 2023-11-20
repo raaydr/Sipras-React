@@ -1,12 +1,12 @@
-import React, { useContext } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from "react-router-dom";
 import useAuthContext from "../context/AuthContext";
 
 const main = () => {
-  const {user,getUser,logout} = useAuthContext();
+  const {user,getUser} = useAuthContext();
   return (
     <div>
-      {!user?<Navbar/>:<Navbar/>}
+      {!user?"":<Navbar/>}
     </div>
   );
 }
@@ -15,7 +15,10 @@ const main = () => {
 
 const Navbar = () =>{
   const {user,getUser,logout} = useAuthContext();
-  
+  useEffect(() => {
+    getUser();
+  }, []);
+
     return (
   <nav className="bg-white border-gray-200 dark:bg-gray-900">
   <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">

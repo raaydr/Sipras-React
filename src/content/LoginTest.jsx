@@ -24,7 +24,7 @@ const Login = () => {
             captcha.current.reset()
     }
     return (
-        <div className="flex flex-col items-center justify-center px-6 mx-auto  pt:mt-0 dark:bg-gray-900">
+        <div className="flex flex-col items-center justify-center px-6 pt-5 mx-auto  pt:mt-0 dark:bg-gray-900">
         <a className="flex flex-col items-center justify-center mb-8 text-2xl font-semibold lg:mb-10 dark:text-white">
           <img src="https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-eula/sticker_1.png" className="mr-4 h-11" alt="FlowBite Logo" />
           <span>Sistem Informasi Sarana dan Prasarana</span>  
