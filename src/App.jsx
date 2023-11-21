@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import Navbar from './components/navbar';
+import LayoutBar from './components/layoutTest';
 
 
 import AuthLayout from './layout/AuthLayout.jsx';
@@ -10,13 +11,15 @@ import GuestLayout from './layout/GuestLayout.jsx';
 import Home from './content/Home.jsx';
 import Login1 from './content/Login.jsx';
 import Register1 from './content/Register.jsx';
-import User from './content/User.jsx';
+import Iden from './content/User.jsx';
 import Forgotpassword1 from './content/Forgotpassword.jsx';
 import Login from './content/LoginTest.jsx';
 import Register from './content/RegisterTest.jsx';
 import ResetPassword from './content/ResetPasswordTest.jsx';
 import Forgotpassword from './content/ForgotPasswordTest.jsx';
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import 'flowbite';
 
 
 
@@ -27,13 +30,21 @@ function App() {
     <>
       
         
-          <Navbar/>
+        
+          
             <Routes>
               <Route path='/' element={<Home />}/>
               <Route element={<AuthLayout/>}>
-                
-                <Route path='/Welcome' element={<User />}/>
-                <Route path='/Reset-Password' element={<ResetPassword />}/>
+                  
+                    <Route path='/Welcome' element={
+                    <LayoutBar>
+                    <Forgotpassword />
+                    </LayoutBar>}/>
+                  
+                  <Route path='/Reset-Password' element={
+                  <LayoutBar>
+                    <ResetPassword />
+                    </LayoutBar>}/>
                 
               </Route>
               <Route element={<GuestLayout/>}>
@@ -43,12 +54,9 @@ function App() {
                 <Route path='/Register1' element={<Register1 />}/>
                 <Route path='/Forgotpassword' element={<Forgotpassword />}/>
               </Route>
-              
-              
-              
             </Routes>
         
-        
+                    
       
     </>
   )

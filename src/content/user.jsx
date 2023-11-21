@@ -15,12 +15,12 @@ const User = () => {
       
     }, []);
     return (
-      <div className="container">
+      <>
        
           <div id="container__article-list">
               <h1>Selamat Datang, {user?user:"guest"}</h1>
             </div>
-      </div>
+      </>
     );
   }
   

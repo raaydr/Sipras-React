@@ -44,6 +44,9 @@ const Navbar = () =>{
             <Link to="/Welcome" className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">User</Link>
           </li>
           <li>
+            <Link to="/Layout" className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">User</Link>
+          </li>
+          <li>
         <Link to="/Reset-Password"  className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">Reset Password</Link>
         </li>
           <li>

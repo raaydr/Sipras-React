@@ -24,6 +24,7 @@ export const AuthProvider =({children}) => {
             setUser(data.data.data.name);
         } catch (e) {
             setUser(null);
+            navigate("/Login");
         }
     }
 

@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "axios": "^1.6.1",
     "flowbite": "^2.1.1",
     "flowbite-datepicker": "^1.2.4",

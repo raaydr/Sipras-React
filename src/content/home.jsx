@@ -1,23 +1,22 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import useAuthContext from "../context/AuthContext";
 const Home = () => {
-
-    const {setRegis} = useAuthContext();
+    const navigate = useNavigate();
+    const {user,getUser} = useAuthContext();
     
 
     useEffect(() => {
-      setRegis(null)
-    
-      
+      getUser();
+      if(user){
+        return navigate("/Welcome");
+      }else{
+        console.log(user)
+        return navigate("/Login");
+      }
     }, []);
-    return (
-      <div className="container">
-       
-          <div id="container__article-list">
-              <h1>Hi, Guest</h1>
-            </div>
-      </div>
-    );
+    
+    
   }
   
   
