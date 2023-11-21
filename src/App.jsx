@@ -49,7 +49,10 @@ function App() {
               </Route>
               <Route element={<GuestLayout/>}>
                 <Route path='/Login1' element={<Login1 />}/>
-                <Route path='/Login' element={<Login />}/>
+                <Route path='/Login' element={
+                    <LayoutBar>
+                    <Login />
+                    </LayoutBar>}/>
                 <Route path='/Register' element={<Register />}/>
                 <Route path='/Register1' element={<Register1 />}/>
                 <Route path='/Forgotpassword' element={<Forgotpassword />}/>
