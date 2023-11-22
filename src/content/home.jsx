@@ -7,7 +7,6 @@ const Home = () => {
     
 
     useEffect(() => {
-      getUser();
       if(user){
         return navigate("/Welcome");
       }else{

@@ -9,17 +9,15 @@ const User = () => {
       setRegis(null)
       if(!user){
         getUser();
-        console.log("di Home")
-        console.log(user)
       }
       
-    }, []);
+    }, [user]);
     return (
       <>
        
-          <div id="container__article-list">
-              <h1>Selamat Datang, {user?user:"guest"}</h1>
-            </div>
+          
+              <h1>Selamat Datang, {user?user.name:"guest"}</h1>
+            
       </>
     );
   }
