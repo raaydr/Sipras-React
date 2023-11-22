@@ -1,7 +1,7 @@
 import React, { useState,useEffect,useRef  } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import useAuthContext from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 
 const Register = () => {
     const [name, setName]= useState("");
@@ -9,15 +9,20 @@ const Register = () => {
     const [tanggal, setTanggal]= useState("");
     const [password, setPassword]= useState("");
     const [password_confirmation, setPasswordConfirmation]= useState("");
-    const {register,errors,setRegis,setErrors} = useAuthContext();
+    const {user,getUser,register,errors,setRegis,setErrors} = useAuthContext();
     const [recaptchaValue, setRecaptchaValue] = useState(null);
     const captcha = useRef(null)
+    const navigate = useNavigate();
     useEffect(() => {
         setRegis(null)
         setErrors([])
         
       }, []);
-
+      useEffect(() => {
+        if(user){
+          return navigate("/Welcome");
+        }
+      }, [user]);
       const data = {name,email,password,password_confirmation,recaptchaValue};
     const HandleRegister = async (event) => {
     

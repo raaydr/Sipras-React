@@ -1,20 +1,30 @@
 import React, { useState,useEffect,useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import useAuthContext from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
+
 const Login = () => {
     const [email, setEmail]= useState("");
     const [password, setPassword]= useState("");
     const [recaptchaValue, setRecaptchaValue] = useState(null);
     const [loginAttempts, setLoginAttempts] = useState(0);
-    const {regis,login,errors,setErrors} = useAuthContext();
+    const {user,getUser,regis,login,errors,setErrors} = useAuthContext();
     const captcha = useRef(null)
+    const navigate = useNavigate();
     useEffect(() => {
-        console.log("regis updated:", regis);
+      setLoginAttempts(0)
         setErrors([])
       }, []);
     
-    
+    useEffect(() => {
+      
+      if(user){
+        return navigate("/Welcome");
+      }else{
+        
+        return navigate("/Login");
+      }
+    }, [user]);
     const data = {email, password,recaptchaValue,loginAttempts};
     const HandleLogin = async (event) => {
        

@@ -5,10 +5,9 @@ import { initFlowbite } from 'flowbite';
 
 
 const AuthLayout = () => {
-    const {user,getUser} = useAuthContext();
+    const {user} = useAuthContext();
     useEffect(() => {
       initFlowbite();
-        getUser()
       }, []);
     
     console.log(user)

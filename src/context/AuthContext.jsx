@@ -19,12 +19,16 @@ export const AuthProvider =({children}) => {
        
         try {
             const token = Cookies.get('tokenku')
-            const data = await axios.get('/api/identify',{ headers: {"Authorization" : `Bearer ${token}`} });
+            const response = await axios.get('/api/identify',{ headers: {"Authorization" : `Bearer ${token}`} });
     
-            setUser(data.data.data.name);
+            setUser(response.data.data);
         } catch (e) {
-            setUser(null);
-            navigate("/Login");
+            if(e.response.status === 401){
+                setUser(null);
+                navigate("/Login");
+
+            }
+            
         }
     }
 
@@ -33,10 +37,9 @@ export const AuthProvider =({children}) => {
         try {
             setRegis(null)
             const response = await axios.post('/api/login',data);
-            console.log(response.data.data.token)
+            
             Cookies.set('tokenku', response.data.data.token)
             setRegis(null)
-            getUser();
             navigate("/Welcome");
         } catch (e) {
             if(e.response.status === 422){
@@ -84,7 +87,7 @@ export const AuthProvider =({children}) => {
 
             } else if (e.response.status === 404){
                 setErrors(e.response.data.data)
-                console.log(errors)
+                
             }
         }
     };
