@@ -150,7 +150,7 @@ function LayoutTest({children}) {
                         </ul>
                         </div>
                     </aside>
-                    <div className="p-4 mb-10 sm:ml-64">
+                    <div className="pt-10 mb-10 sm:ml-64">
                         {children}
                     </div>
                 </div>

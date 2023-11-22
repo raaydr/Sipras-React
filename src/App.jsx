@@ -4,7 +4,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import Navbar from './components/navbar';
 import LayoutBar from './components/layoutTest';
-
+import { useEffect } from "react";
 
 import AuthLayout from './layout/AuthLayout.jsx';
 import GuestLayout from './layout/GuestLayout.jsx';
@@ -20,11 +20,14 @@ import Forgotpassword from './content/ForgotPasswordTest.jsx';
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import 'flowbite';
-
+import { initFlowbite } from 'flowbite';
 
 
 function App() {
   const [count, setCount] = useState(0)
+  useEffect(() => {
+    initFlowbite();
+  }, []);
 
   return (
     <>
@@ -53,9 +56,13 @@ function App() {
                     <LayoutBar>
                     <Login />
                     </LayoutBar>}/>
+                    <Route path='/Forgotpassword' element={
+                    <LayoutBar>
+                    <Forgotpassword />
+                    </LayoutBar>}/>
                 <Route path='/Register' element={<Register />}/>
                 <Route path='/Register1' element={<Register1 />}/>
-                <Route path='/Forgotpassword' element={<Forgotpassword />}/>
+                
               </Route>
             </Routes>
         

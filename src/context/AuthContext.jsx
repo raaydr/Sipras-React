@@ -48,13 +48,22 @@ export const AuthProvider =({children}) => {
         }
     }
 
-    const logout = () =>{
-        const token = Cookies.get('tokenku')
+    const logout = async ({}) =>{
+
+        
+        try {
+            const token = Cookies.get('tokenku')
         axios.get('/api/logout',{ headers: {"Authorization" : `Bearer ${token}`} }).then(() =>{
             setUser(null)
             }
         );
         Cookies.set('tokenku', null)
+           
+            
+        } catch (e) {
+            
+        }
+        
 
     }
     const register = async ({...data}) =>{
