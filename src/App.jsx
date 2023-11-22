@@ -17,6 +17,8 @@ import Login from './content/LoginTest.jsx';
 import Register from './content/RegisterTest.jsx';
 import ResetPassword from './content/ResetPasswordTest.jsx';
 import Forgotpassword from './content/ForgotPasswordTest.jsx';
+import LandingLayout from './components/LandingLayout.jsx';
+import Landing from './content/Landing.jsx';
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import 'flowbite';
@@ -36,33 +38,42 @@ function App() {
         
           
             <Routes>
-              <Route path='/' element={<Home />}/>
+              
               <Route element={<AuthLayout/>}>
                   
-                    <Route path='/Welcome' element={
+                  <Route path='/Welcome' element={
                     <LayoutBar>
-                    <Forgotpassword />
+                    <Iden />
                     </LayoutBar>}/>
                   
                   <Route path='/Reset-Password' element={
-                  <LayoutBar>
-                    <ResetPassword />
+                    <LayoutBar>
+                      <ResetPassword />
                     </LayoutBar>}/>
-                
+
+
               </Route>
               <Route element={<GuestLayout/>}>
-                <Route path='/Login1' element={<Login1 />}/>
-                <Route path='/Login' element={
-                    <LayoutBar>
-                    <Login />
-                    </LayoutBar>}/>
-                    <Route path='/Forgotpassword' element={
-                    <LayoutBar>
-                    <Forgotpassword />
-                    </LayoutBar>}/>
-                <Route path='/Register' element={<Register />}/>
-                <Route path='/Register1' element={<Register1 />}/>
+              
+                  <Route path='/' element={
+                    <LandingLayout>
+                      <Landing />
+                    </LandingLayout>}/>
+                    
+                  <Route path='/Login' element={
+                    <LandingLayout>
+                      <Login />
+                    </LandingLayout>}/>
                 
+                  <Route path='/Forgotpassword' element={
+                    <LandingLayout>
+                      <Forgotpassword />
+                    </LandingLayout>}/>
+
+                  <Route path='/Register' element={
+                    <LandingLayout>
+                      <Register />
+                    </LandingLayout>}/>  
               </Route>
             </Routes>
         
