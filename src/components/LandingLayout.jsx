@@ -7,7 +7,7 @@ const LandingLayout = ({children}) => {
     const navigate = useNavigate();
     const {user,getUser} = useAuthContext();
     const login =()=> navigate("/Login");
-    const member =()=> navigate("/Welcome");
+    const member =()=> navigate("/dashboard/");
     useEffect(() => {
         if(!user){
             getUser();

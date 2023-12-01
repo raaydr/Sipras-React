@@ -8,7 +8,7 @@ const Home = () => {
 
     useEffect(() => {
       if(user){
-        return navigate("/Welcome");
+        return navigate("/dashboard/");
       }else{
         console.log(user)
         return navigate("/Login");

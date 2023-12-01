@@ -19,7 +19,7 @@ const Login = () => {
     useEffect(() => {
       
       if(user){
-        return navigate("/Welcome");
+        return navigate("/dashboard/");
       }else{
         
         return navigate("/Login");

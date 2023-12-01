@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import AuthLayout from './layout/AuthLayout.jsx';
 import GuestLayout from './layout/GuestLayout.jsx';
 import Home from './content/Home.jsx';
-import Iden from './content/User.jsx';
+import Welcome from './content/User.jsx';
 import Login from './content/LoginTest.jsx';
 import Register from './content/RegisterTest.jsx';
 import ResetPassword from './content/ResetPasswordTest.jsx';
@@ -36,20 +36,23 @@ function App() {
           
             <Routes>
               
-              <Route element={<AuthLayout/>}>
-                  
-                  <Route path='/Welcome' element={
-                    <LayoutBar>
-                    <Iden />
-                    </LayoutBar>}/>
-                  
-                  <Route path='/Reset-Password' element={
-                    <LayoutBar>
-                      <ResetPassword />
-                    </LayoutBar>}/>
+            <Route element={<AuthLayout />}>
+              <Route
+                path="/dashboard/*"
+                element={
+                  <LayoutBar>
+                    <Routes>
+                      <Route index element={<Welcome />} />
+                      
+                      <Route path="change-password" element={<ResetPassword />} />
+                     
 
-
-              </Route>
+                    </Routes>
+                  </LayoutBar>
+                }
+              />
+            </Route>
+              
               <Route element={<GuestLayout/>}>
               
                   <Route path='/' element={
