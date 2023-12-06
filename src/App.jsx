@@ -16,6 +16,7 @@ import ResetPassword from './content/ResetPasswordTest.jsx';
 import Forgotpassword from './content/ForgotPasswordTest.jsx';
 import LandingLayout from './components/LandingLayout.jsx';
 import Landing from './content/Landing.jsx';
+import BarangContent from './content/BarangContent.jsx';
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import 'flowbite';
@@ -47,6 +48,7 @@ function App() {
                       <Route index element={<Welcome />} />
                       
                       <Route path="Reset-Password" element={<ResetPassword />} />
+                      <Route path="Barang" element={<BarangContent />} />
                      
 
                     </Routes>

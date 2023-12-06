@@ -21,7 +21,7 @@ const ResetPassword = () => {
     const HandleSubmit = async (event) => {
        
         event.preventDefault()
-        await csrf();
+        //await csrf();
         setErrors([]);
         setStatus(null);
         try {
