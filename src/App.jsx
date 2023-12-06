@@ -20,12 +20,14 @@ import Landing from './content/Landing.jsx';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import 'flowbite';
 import { initFlowbite } from 'flowbite';
-
+import useAuthContext from './context/AuthContext.jsx';
 
 function App() {
   const [count, setCount] = useState(0)
+  const {getUser} = useAuthContext();
   useEffect(() => {
     initFlowbite();
+    
   }, []);
 
   return (
@@ -44,7 +46,7 @@ function App() {
                     <Routes>
                       <Route index element={<Welcome />} />
                       
-                      <Route path="change-password" element={<ResetPassword />} />
+                      <Route path="Reset-Password" element={<ResetPassword />} />
                      
 
                     </Routes>

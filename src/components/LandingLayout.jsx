@@ -10,7 +10,7 @@ const LandingLayout = ({children}) => {
     const member =()=> navigate("/dashboard/");
     useEffect(() => {
         if(!user){
-            getUser();
+            
         }
         
       }, []);

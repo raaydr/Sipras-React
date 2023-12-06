@@ -1,4 +1,4 @@
-import {createContext, useContext, useState} from "react";
+import {createContext, useContext, useState, useEffect} from "react";
 import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"
@@ -6,7 +6,7 @@ import Cookies from "js-cookie"
 const AuthContext = createContext({});
 
 export const AuthProvider =({children}) => {
-    const[user, setUser] = useState(null);
+    const[user, setUser] = useState([]);
     const[regis, setRegis] = useState(null);
 
     const [errors, setErrors]= useState([]);
@@ -17,11 +17,13 @@ export const AuthProvider =({children}) => {
 
     const getUser = async () => {
        
+        
         try {
             const token = Cookies.get('tokenku')
             const response = await axios.get('/api/identify',{ headers: {"Authorization" : `Bearer ${token}`} });
     
             setUser(response.data.data);
+            console.log("ada orang")
         } catch (e) {
             if(e.response.status === 401){
                 setUser(null);
@@ -40,7 +42,7 @@ export const AuthProvider =({children}) => {
             
             Cookies.set('tokenku', response.data.data.token)
             setRegis(null)
-            navigate("/Welcome");
+            navigate("/dashboard");
         } catch (e) {
             if(e.response.status === 422){
                 setErrors(e.response.data.errors)
@@ -92,7 +94,9 @@ export const AuthProvider =({children}) => {
         }
     };
 
-    return <AuthContext.Provider value={{user,errors,regis,setRegis,setErrors,getUser,login,logout,register,csrf}}>
+    
+
+    return <AuthContext.Provider value={{user,errors,regis,setUser,setRegis,setErrors,getUser,login,logout,register,csrf,navigate}}>
         {children}
     </AuthContext.Provider>
 }

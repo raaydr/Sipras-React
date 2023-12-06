@@ -14,12 +14,13 @@ const Login = () => {
     useEffect(() => {
       setLoginAttempts(0)
         setErrors([])
+        
       }, []);
     
     useEffect(() => {
       
       if(user){
-        return navigate("/dashboard/");
+        return navigate("/dashboard/  ");
       }else{
         
         return navigate("/Login");
