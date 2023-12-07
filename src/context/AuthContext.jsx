@@ -159,8 +159,24 @@ export const AuthProvider =({children}) => {
             }
         }
     }
+    const deletedata = async (currentId) =>{
+        
+        try {
+            const token = Cookies.get('tokenku')
+            const response = await axios.delete(`/api/delete-barang/${currentId}`,{ headers: {"Authorization" : `Bearer ${token}`} })
+            setFetchStatus(true)
+            
+        } catch (e) {
+            if(e.response.status === 422){
+                setErrors(e.response.data.errors)
+
+            } else if (e.response.status === 404){
+                setErrors(e.response.data.data)
+            }
+        }
+    }
     return <AuthContext.Provider value={{user,errors,regis,setUser,setRegis,setErrors,getUser,login,logout,register,csrf,navigate,
-        fetchStatus, setFetchStatus,currentId, setCurrentId,Rupiah,Platform, createdata, editdata
+        fetchStatus, setFetchStatus,currentId, setCurrentId,Rupiah,Platform, createdata, editdata, deletedata
     }}>
         {children}
     </AuthContext.Provider>
