@@ -26,8 +26,8 @@ const [searchEdited, setsearchEdited] = useState("");
 const [searchStatus, setsearchStatus] = useState("");
 
 const { 
-  fetchStatus, setFetchStatus,
-  navigate,deletedata, Rupiah, Platform,csrf
+  fetchStatus, setFetchStatus, setCurrentId,
+  navigate,deletedata
 } = useAuthContext();
 
 useEffect(() => {
@@ -36,8 +36,6 @@ useEffect(() => {
 
 
 const fetchData = async () => {
-    
-    await csrf();
     const token = Cookies.get('tokenku')
     await axios.get("/api/data-barang",{ headers: {"Authorization" : `Bearer ${token}`} })
       .then((res) => {
@@ -73,14 +71,6 @@ useEffect(() => {
   );
   setSearchResults(results);
 }, [searchTerm, data]);
-
-
-useEffect(() => {
-  // Fungsi untuk melakukan pencarian
-  
-}, [search, data]);
-
-
 useEffect(() => {
   const results = data.filter(
     (item) =>
@@ -143,7 +133,10 @@ const handleDelete = (event) => {
 
 const handleEdit = (event) => {
   let idData = parseInt(event.target.value)
-  navigate(`/dashboard/list-job-vacancy/edit/${idData}`)
+  const formElement = document.getElementById('formulir');
+  formElement.scrollIntoView({ behavior: 'smooth' });
+
+  setCurrentId(idData)
 }
 
 

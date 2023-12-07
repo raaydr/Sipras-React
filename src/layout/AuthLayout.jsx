@@ -12,8 +12,6 @@ const AuthLayout =  () => {
       getUser()
       
     }, []);
-    
-      console.log("debug")
     return user ? <Outlet/> : <Navigate to ="/login"/>
 
 }

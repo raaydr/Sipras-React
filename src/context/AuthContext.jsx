@@ -14,6 +14,7 @@ export const AuthProvider =({children}) => {
     const navigate = useNavigate();
 
     const csrf =()=> axios.get("/sanctum/csrf-cookie")
+    
 
     const getUser = async () => {
        
@@ -23,7 +24,7 @@ export const AuthProvider =({children}) => {
             const response = await axios.get('/api/identify',{ headers: {"Authorization" : `Bearer ${token}`} });
     
             setUser(response.data.data);
-            console.log("ada orang")
+            
         } catch (e) {
             if(e.response.status === 401){
                 setUser(null);
@@ -120,8 +121,46 @@ export const AuthProvider =({children}) => {
           }
     }
 
+    const createdata = async ({...data}) =>{
+        
+        try {
+            
+            const token = Cookies.get('tokenku')
+            const response = await axios.post("/api/create-barang", data,{ headers: {"Authorization" : `Bearer ${token}`} })
+            
+            
+            setCurrentId(-1);
+            setFetchStatus(true)
+            
+        } catch (e) {
+            if(e.response.status === 422){
+                setErrors(e.response.data.errors)
+
+            } else if (e.response.status === 404){
+                setErrors(e.response.data.data)
+            }
+        }
+    }
+    const editdata = async ({...data},currentId) =>{
+        
+        try {
+            const token = Cookies.get('tokenku')
+            const response = await axios.patch(`/api/update-barang/${currentId}`, data,{ headers: {"Authorization" : `Bearer ${token}`} })
+            
+            setCurrentId(-1);
+            setFetchStatus(true)
+            
+        } catch (e) {
+            if(e.response.status === 422){
+                setErrors(e.response.data.errors)
+
+            } else if (e.response.status === 404){
+                setErrors(e.response.data.data)
+            }
+        }
+    }
     return <AuthContext.Provider value={{user,errors,regis,setUser,setRegis,setErrors,getUser,login,logout,register,csrf,navigate,
-        fetchStatus, setFetchStatus,currentId, setCurrentId,Rupiah,Platform
+        fetchStatus, setFetchStatus,currentId, setCurrentId,Rupiah,Platform, createdata, editdata
     }}>
         {children}
     </AuthContext.Provider>
