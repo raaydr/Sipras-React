@@ -1,7 +1,7 @@
 import React, { useState,useEffect,useRef } from "react";
 import axios from "../api/axios";
 import Cookies from "js-cookie";
-import useAuthContext from "../context/AuthContext";
+import useBarangContext from "../context/BarangContext";
 import { useParams  } from "react-router-dom";
 
 const FormBarang = () => {
@@ -9,7 +9,7 @@ const FormBarang = () => {
         
         currentId, setCurrentId,
         errors, setErrors,createdata,editdata
-      } = useAuthContext();
+      } = useBarangContext();
     
     const [nama_barang, setnama_barang]= useState("");
     const [kode_barang , setkode_barang ]= useState("");

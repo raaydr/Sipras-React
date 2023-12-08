@@ -1,7 +1,7 @@
 import React, { useState,useEffect,useRef } from "react";
 import axios from "../api/axios";
 import Cookies from "js-cookie";
-import useAuthContext from "../context/AuthContext";
+import useBarangContext from "../context/BarangContext";
 import { useToast, immediateToast } from "izitoast-react";
 import "izitoast-react/dist/iziToast.css";
 
@@ -30,7 +30,7 @@ const [searchStatus, setsearchStatus] = useState("");
 const { 
   fetchStatus, setFetchStatus, setCurrentId,
   navigate,deletedata
-} = useAuthContext();
+} = useBarangContext();
 
 useEffect(() => {
   setFetchStatus(true)
