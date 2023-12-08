@@ -2,6 +2,8 @@ import React, { useState,useEffect,useRef } from "react";
 import axios from "../api/axios";
 import Cookies from "js-cookie";
 import useAuthContext from "../context/AuthContext";
+import { useToast, immediateToast } from "izitoast-react";
+import "izitoast-react/dist/iziToast.css";
 
 export default function TableBarang () {
 
@@ -33,6 +35,15 @@ const {
 useEffect(() => {
   setFetchStatus(true)
 }, [])
+
+const showMessage = useToast({
+  title: "Test",
+  message: "Show my message :)",
+  theme: "light",
+  icon: 'warn',
+  color: 'red',
+  iconUrl: '/injoker.jpg',
+});
 
 
 const fetchData = async () => {
@@ -143,18 +154,27 @@ const handleEdit = (event) => {
   return (
     <>
       <div className="container mx-auto">
-        <div className="flex">
-        <h5 className=" flex items-center text-xl font-bold dark:text-white m-5 ">List Data Table</h5>
-        <input
-              type="text"
-              id="search"
-              name="search"
-              className="flex items-end text-center m-5 px-1 py-3 font-small  text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
-              placeholder="pencarian"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-        </div>
+      <div className="flex items-center">
+  <h5 className="text-xl font-bold dark:text-white m-5">List Data Table</h5>
+  
+  <button
+    type="button" onClick={showMessage}
+    className="flex focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+  >
+    Green
+  </button>
+  
+  <input
+    type="text"
+    id="search"
+    name="search"
+    className="flex-grow items-end text-center m-5 px-1 py-3 font-small text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+    placeholder="pencarian"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+</div>
+
         
             
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -381,11 +401,12 @@ const handleEdit = (event) => {
               ))
             ) : (
               // Menampilkan pesan tidak ditemukan jika tidak ada hasil
-              <tr className="flex items-center w-full px-1 py-3 text-base font-small">
-                <td className="place-self-center">
-                Pekerjaan tidak ditemukan.
-                </td>
-              </tr>
+              <tr className="flex-grow  items-center text-center justify-center w-full">
+              <td colSpan="10" className="px-1 py-3 text-base font-small">
+                Job Not Found
+              </td>
+            </tr>
+
 
               
             )}
