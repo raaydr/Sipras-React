@@ -2,7 +2,7 @@ import React, { useState,useEffect,useRef } from "react";
 import axios from "../api/axios";
 import Cookies from "js-cookie";
 import useBarangContext from "../context/BarangContext";
-import { useParams  } from "react-router-dom";
+import { useToast, immediateToast } from "izitoast-react";
 
 const FormBarang = () => {
     const { 
@@ -55,9 +55,24 @@ const FormBarang = () => {
     const HandleSubmit = (event) => {
       
       event.preventDefault()
-      validateForm()
+      if (validateForm()) {
+        currentId === -1 ? createdata(data): editdata(data,currentId);
+        immediateToast("success", {
+          title: "Test",
+          message: "Show my message :)",
+          theme: "light",
+          
+        });
+      } else{
+        immediateToast("error", {
+          title: "Test",
+          message: "Show my message :)",
+          theme: "light",
+          
+        });
+      }
       // Lakukan aksi ketika formulir valid
-      currentId === -1 ? createdata(data): editdata(data,currentId);
+      
       
       clearform()
   
@@ -116,7 +131,7 @@ const FormBarang = () => {
                 </div>
                 <div className="mb-6">
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">tipe_barang</label>
-                    <input type="text" id="tipe_barang" onChange={(e)=>settipe_barang(e.target.value)} value={tipe_barang} name='tipe_barang' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="WebDEV" required />
+                    <input type="text" id="tipe_barang" onChange={(e)=>settipe_barang(e.target.value)} value={tipe_barang} name='tipe_barang' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="WebDEV"  />
                     {errors.tipe_barang && <span style={{ color: 'red' }}>{errors.tipe_barang}</span>}
                 </div>
                 <div className="mb-6">

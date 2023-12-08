@@ -12,6 +12,8 @@ export const BarangProvider =({children}) => {
     const [fetchStatus, setFetchStatus] = useState(true)
     //indikator
     const [currentId, setCurrentId] = useState(-1)
+    const [iziStatus, setiziStatus] = useState(null)
+    const [isMenuOpen, setMenuOpen] = useState(false);
     
     const Rupiah = (angka) =>{
         if(angka == null|| angka === 0){
@@ -43,7 +45,9 @@ export const BarangProvider =({children}) => {
             
             
             setCurrentId(-1);
+            setiziStatus("success1")
             setFetchStatus(true)
+            setMenuOpen(!isMenuOpen);
             
         } catch (e) {
             if(e.response.status === 422){
@@ -52,6 +56,7 @@ export const BarangProvider =({children}) => {
             } else if (e.response.status === 404){
                 setErrors(e.response.data.data)
             }
+            setiziStatus("error")
         }
     }
     const editdata = async ({...data},currentId) =>{
@@ -59,9 +64,10 @@ export const BarangProvider =({children}) => {
         try {
             const token = Cookies.get('tokenku')
             const response = await axios.patch(`/api/update-barang/${currentId}`, data,{ headers: {"Authorization" : `Bearer ${token}`} })
-            
+            setiziStatus("success2")
             setCurrentId(-1);
             setFetchStatus(true)
+            setMenuOpen(!isMenuOpen);
             
         } catch (e) {
             if(e.response.status === 422){
@@ -70,6 +76,7 @@ export const BarangProvider =({children}) => {
             } else if (e.response.status === 404){
                 setErrors(e.response.data.data)
             }
+            setiziStatus("error")
         }
     }
     const deletedata = async (currentId) =>{
@@ -88,7 +95,9 @@ export const BarangProvider =({children}) => {
             }
         }
     }
-    return <BarangContext.Provider value={{errors,setErrors,fetchStatus, setFetchStatus,currentId, setCurrentId,Rupiah,Platform, createdata, editdata, deletedata
+    return <BarangContext.Provider value={{errors,setErrors,fetchStatus, setFetchStatus,currentId, setCurrentId,
+        Rupiah,Platform,isMenuOpen, setMenuOpen, createdata, editdata, deletedata,
+        iziStatus, setiziStatus
     }}>
         {children}
     </BarangContext.Provider>

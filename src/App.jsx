@@ -2,6 +2,7 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import "izitoast-react/dist/iziToast.css";
 
 import LayoutBar from './components/layoutTest';
 import { useEffect } from "react";

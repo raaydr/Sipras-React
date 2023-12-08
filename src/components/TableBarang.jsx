@@ -3,7 +3,7 @@ import axios from "../api/axios";
 import Cookies from "js-cookie";
 import useBarangContext from "../context/BarangContext";
 import { useToast, immediateToast } from "izitoast-react";
-import "izitoast-react/dist/iziToast.css";
+
 
 export default function TableBarang () {
 
@@ -29,22 +29,12 @@ const [searchStatus, setsearchStatus] = useState("");
 
 const { 
   fetchStatus, setFetchStatus, setCurrentId,
-  navigate,deletedata
+  navigate,deletedata,isMenuOpen, setMenuOpen
 } = useBarangContext();
 
 useEffect(() => {
   setFetchStatus(true)
 }, [])
-
-const showMessage = useToast({
-  title: "Test",
-  message: "Show my message :)",
-  theme: "light",
-  icon: 'warn',
-  color: 'red',
-  iconUrl: '/injoker.jpg',
-});
-
 
 const fetchData = async () => {
     const token = Cookies.get('tokenku')
@@ -144,24 +134,28 @@ const handleDelete = (event) => {
 
 const handleEdit = (event) => {
   let idData = parseInt(event.target.value)
-  const formElement = document.getElementById('formulir');
-  formElement.scrollIntoView({ behavior: 'smooth' });
+  setMenuOpen(true);
 
   setCurrentId(idData)
 }
 
+const openMenu = () => {
+    
+  setMenuOpen(true);
+  setCurrentId(-1)
+};
 
   return (
     <>
       <div className="container mx-auto">
       <div className="flex items-center">
-  <h5 className="text-xl font-bold dark:text-white m-5">List Data Table</h5>
+  <h5 className="text-xl font-bold dark:text-white m-5">List Barang</h5>
   
   <button
-    type="button" onClick={showMessage}
+    type="button" onClick={openMenu}
     className="flex focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
   >
-    Green
+    Create Barang
   </button>
   
   <input
