@@ -180,12 +180,6 @@ const openMenu = () => {
                 
                 </th>
                 <th scope="col" className="px-6 py-3">
-                <SortableHeader
-                  columnKey="nama_barang"
-                  columnType="string"
-                  sortConfig={sortConfig}
-                  onSort={handleSort}
-                />
                 <input
                 type="text"
                 value={searchNamaBarang}
@@ -195,18 +189,20 @@ const openMenu = () => {
                   }
                 }
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Pekerjaan"
+                placeholder="Search"
                 
                 />
+                <SortableHeader
+                  columnKey="nama_barang"
+                  columnType="string"
+                  sortConfig={sortConfig}
+                  name="Barang"
+                  onSort={handleSort}
+                />
+                
                 
                 </th>
                 <th scope="col" className="px-6 py-3">
-                <SortableHeader
-                  columnKey="kode_barang"
-                  columnType="string"
-                  sortConfig={sortConfig}
-                  onSort={handleSort}
-                />
                 <input
                 type="text"
                 value={searchKode}
@@ -216,17 +212,19 @@ const openMenu = () => {
                   }
                 }
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="kode"
+                placeholder="search"
                 
                 />
-                </th>
-                <th scope="col" className="px-6 py-3">
                 <SortableHeader
-                  columnKey="tipe_barang"
+                  columnKey="kode_barang"
                   columnType="string"
                   sortConfig={sortConfig}
+                  name="Kode"
                   onSort={handleSort}
                 />
+                
+                </th>
+                <th scope="col" className="px-6 py-3">
                 <input
                 type="text"
                 value={searchTipeBarang}
@@ -237,17 +235,19 @@ const openMenu = () => {
                 }
                 
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Tipe"
+                placeholder="Search"
                 
                 />
-                </th>
-                <th scope="col" className="px-6 py-3">
                 <SortableHeader
-                  columnKey="jumlah"
-                  columnType="number"
+                  columnKey="tipe_barang"
+                  columnType="string"
+                  name="Tipe"
                   sortConfig={sortConfig}
                   onSort={handleSort}
                 />
+                
+                </th>
+                <th scope="col" className="px-6 py-3">
                 <input
                 type="text"
                 value={searchJumlah}
@@ -258,17 +258,19 @@ const openMenu = () => {
                 }
                 
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Jumlah"
+                placeholder="search"
                 
                 />
-                </th>
-                <th scope="flex" className="px-6 py-3">
                 <SortableHeader
-                  columnKey="rusak"
+                  columnKey="jumlah"
                   columnType="number"
+                  name="Jumlah"
                   sortConfig={sortConfig}
                   onSort={handleSort}
                 />
+                
+                </th>
+                <th scope="flex" className="px-6 py-3">
                 <input
                 type="text"
                 value={searchRusak}
@@ -279,18 +281,20 @@ const openMenu = () => {
                 }
                 
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Rusak"
+                placeholder="search"
                 
                 />
-                
-                </th>
-                <th scope="col" className="px-6 py-3">
                 <SortableHeader
-                  columnKey="user_name"
-                  columnType="string"
+                  columnKey="rusak"
+                  columnType="number"
+                  name="Rusak"
                   sortConfig={sortConfig}
                   onSort={handleSort}
                 />
+                
+                
+                </th>
+                <th scope="col" className="px-6 py-3">
                 <input
                 type="text"
                 value={searchCreated}
@@ -301,18 +305,20 @@ const openMenu = () => {
                 }
                 
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Created"
+                placeholder="search"
                 
                 />
-                
-                </th>
-                <th scope="col" className="px-6 py-3">
                 <SortableHeader
-                  columnKey="editedBy_name"
+                  columnKey="user_name"
                   columnType="string"
+                  name="Created"
                   sortConfig={sortConfig}
                   onSort={handleSort}
                 />
+                
+                
+                </th>
+                <th scope="col" className="px-6 py-3">
                 <input
                 type="text"
                 value={searchEdited}
@@ -323,31 +329,17 @@ const openMenu = () => {
                 }
                 
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="edited"
+                placeholder="search"
                 
                 />
-                </th>
-                <th scope="col" className="px-6 py-3">
                 <SortableHeader
-                  columnKey="status"
+                  columnKey="editedBy_name"
                   columnType="string"
+                  name="Edited"
                   sortConfig={sortConfig}
                   onSort={handleSort}
                 />
-                <input
-                type="text"
-                value={searchStatus}
-                onChange={(e) => {
-                  setsearchStatus(e.target.value)
-                  handleSearch(e.target.value)
-                  }
-                }
                 
-                
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Status"
-                
-                />
                 </th>
                 
                 <th scope="col" className="px-6 py-3">
@@ -384,9 +376,7 @@ const openMenu = () => {
                 <td className="px-6 py-4">
                 {res.editedBy_name}
                 </td>
-                <td className="px-6 py-4">
-                {res.status}
-                </td>
+                
                 <td className="px-6 py-4">
                   <button onClick={handleEdit} value={res.id} className="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900">Edit</button>
                   <button onClick={handleDelete} value={res.id} className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
@@ -413,14 +403,14 @@ const openMenu = () => {
 }
 
 // SortableHeader component
-const SortableHeader = ({columnKey,columnType, sortConfig, onSort }) => {
+const SortableHeader = ({columnKey,columnType, sortConfig, onSort,name }) => {
   const handleClick = () => {
     onSort(columnKey,columnType);
   };
 
   return (
-    <button className="px-3 py-2 text-xs m-1 font-medium text-center focus:outline-none text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:ring-green-300 rounded-lg dark:focus:ring-green-900" onClick={handleClick}> sort
-      {sortConfig.key === columnKey && sortConfig.type === columnType && ( sortConfig.direction === null ? 'sort' :
+    <button className=" py-3 text-base m-1 font-medium text-center focus:outline-none text-white  bg-purple-500 hover:bg-purple-500 focus:ring-4 focus:ring-purple-500 rounded-lg dark:focus:ring-green-900" onClick={handleClick}> {name}
+      {sortConfig.key === columnKey && sortConfig.type === columnType && ( sortConfig.direction === null ? name :
         sortConfig.direction === 'asc' ? ' ↑' : ' ↓'
         
       )}
@@ -429,20 +419,5 @@ const SortableHeader = ({columnKey,columnType, sortConfig, onSort }) => {
   );
 };
 
-function WordWrap(sentence) {
-  if(sentence != null){
-      let panjang_kata = sentence.length;
-      let wrap = sentence.substring(0,30);
-      if(panjang_kata >= 30){
-          return wrap +'...';
-     } else{
-         return sentence;
-     }
-  }else{
-
-  }return "kosong";
-  
-  
-}
 
 
