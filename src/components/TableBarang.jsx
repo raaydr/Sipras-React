@@ -9,11 +9,13 @@ export default function TableBarang () {
 
     
 const [data, setData] = useState([])
-const [errors, setErrors] = useState({});
 const [searchResults, setSearchResults] = useState([]);
 const [search, setSearch] = useState({})
 const [searchTerm, setSearchTerm] = useState("");
-const [sortField, setSortField] = useState("");
+
+const [page, setPage] = useState(1);
+const [tableRange, setTableRange] = useState([]);
+const [slice, setSlice] = useState([]);
 
 const [sortConfig, setSortConfig] = useState({ key: null, direction: null,type:null });
 
@@ -32,10 +34,6 @@ const {
   navigate,deletedata,isMenuOpen, setMenuOpen
 } = useBarangContext();
 
-useEffect(() => {
-  setFetchStatus(true)
-}, [])
-
 const fetchData = async () => {
     const token = Cookies.get('tokenku')
     await axios.get("/api/data-barang",{ headers: {"Authorization" : `Bearer ${token}`} })
@@ -45,7 +43,6 @@ const fetchData = async () => {
       })
       .catch((error) => {
       })
-    setFetchStatus(false)
   };
 
 useEffect(() => {
@@ -55,6 +52,7 @@ useEffect(() => {
     fetchData()
     
   }
+  setFetchStatus(false)
 
 }, [fetchStatus, setFetchStatus]) 
 
@@ -118,8 +116,21 @@ useEffect(() => {
   });
 
   setSearchResults(sortedData);
-}, [searchTerm, search, data, sortConfig]);
 
+  const range = calculateRange(sortedData, 10);
+  setTableRange([...range]);
+
+  const slice = sliceData(sortedData, page, 10);
+  setSlice([...slice]);
+
+  
+}, [searchTerm, search, data, sortConfig,page]);
+
+useEffect(() => {
+  if (slice.length < 1 && page !== 1) {
+    setPage(page - 1);
+  }
+}, [slice, page, setPage]);
 
 const handleSort = (key,type) => {
   let direction = 'asc';
@@ -130,6 +141,22 @@ const handleSort = (key,type) => {
 
   setSortConfig({ key, direction,type });
 };
+
+const calculateRange = (data, rowsPerPage) => {
+  const range = [];
+  const num = Math.ceil(data.length / rowsPerPage);
+  let i = 1;
+  for (let i = 1; i <= num; i++) {
+    range.push(i);
+  }
+  return range;
+};
+
+const sliceData = (data, page, rowsPerPage) => {
+  return data.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+};
+
+
 
 //handling input
 const handleSearch = (search) => {
@@ -361,9 +388,9 @@ const openMenu = () => {
               </tr>
             </thead>
             <tbody>
-            {searchResults.length > 0 ? (
+            {slice.length > 0 ? (
           // Menampilkan hasil pencarian jika ditemukan
-          searchResults.map((res,Index) => (
+          slice.map((res,Index) => (
             <tr key ={res.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                   {Index + 1}
@@ -409,6 +436,21 @@ const openMenu = () => {
             )}
             </tbody>
           </table>
+          <nav className="flex items-center flex-column px-6 py-5  flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
+  <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <span className="font-semibold text-gray-900 dark:text-white">1-10</span> of <span className="font-semibold text-gray-900 dark:text-white">1000</span></span>
+  <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+  {tableRange.map((el, index) => (
+    
+    <li>
+      <button  key={index} onClick={() => setPage(el)} className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" 
+      {...page === el ? '' : 'disable'}>{el}</button>
+    </li>
+    )
+    )}
+  {console.log(tableRange)}
+  </ul>
+</nav>
+
         </div>
       </div>
     </>
