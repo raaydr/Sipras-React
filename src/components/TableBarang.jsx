@@ -71,9 +71,7 @@ useEffect(() => {
 
   );
   setSearchResults(results);
-}, [searchTerm, data]);
-useEffect(() => {
-  const results = data.filter(
+  const result = results.filter(
     (item) =>
     (item.nama_barang && item.nama_barang.toLowerCase().includes(searchNamaBarang.toLowerCase()))&&
     (item.kode_barang && item.kode_barang.toLowerCase().includes(searchKode.toLowerCase()))&&
@@ -83,9 +81,9 @@ useEffect(() => {
     
   );
   
-  setSearchResults(results);
+  setSearchResults(result);
   // Sort the data when the sortConfig changes
-  const sortedData = results.sort((a, b) => {
+  const sortedData = result.sort((a, b) => {
     if (sortConfig.key) {
       const aValue = a[sortConfig.key];
       const bValue = b[sortConfig.key];
@@ -97,6 +95,20 @@ useEffect(() => {
       if(sortConfig.type === "number"){
         return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
       }else{
+
+        const regex = /(\d+)$/; // Regex untuk mengekstrak angka di belakang string
+
+        const aMatch = aValue.match(regex);
+        const bMatch = bValue.match(regex);
+
+        // Pastikan kedua string memiliki format angka di belakangnya
+        if (aMatch && bMatch) {
+          const aNumber = parseInt(aMatch[0], 10);
+          const bNumber = parseInt(bMatch[0], 10);
+
+          return sortConfig.direction === 'asc' ? aNumber - bNumber : bNumber - aNumber;
+        }
+
         return sortConfig.direction === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
         
       }
@@ -106,7 +118,8 @@ useEffect(() => {
   });
 
   setSearchResults(sortedData);
-}, [search, data, sortConfig]);
+}, [searchTerm, search, data, sortConfig]);
+
 
 const handleSort = (key,type) => {
   let direction = 'asc';
