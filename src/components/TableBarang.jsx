@@ -14,6 +14,7 @@ const [search, setSearch] = useState({})
 const [searchTerm, setSearchTerm] = useState("");
 
 const [page, setPage] = useState(1);
+const [pageData, setPageData] = useState(1);
 const [tableRange, setTableRange] = useState([]);
 const [slice, setSlice] = useState([]);
 
@@ -34,9 +35,9 @@ const {
   navigate,deletedata,isMenuOpen, setMenuOpen
 } = useBarangContext();
 
-const fetchData = async () => {
+const fetchData =  () => {
     const token = Cookies.get('tokenku')
-    await axios.get("/api/data-barang",{ headers: {"Authorization" : `Bearer ${token}`} })
+     axios.get("/api/data-barang",{ headers: {"Authorization" : `Bearer ${token}`} })
       .then((res) => {
         setData([...res.data.data])
         
@@ -47,6 +48,8 @@ const fetchData = async () => {
 
 useEffect(() => {
   //fetch data dengan kondisi
+  
+  
   if (fetchStatus === true) {
     
     fetchData()
@@ -117,14 +120,14 @@ useEffect(() => {
 
   setSearchResults(sortedData);
 
-  const range = calculateRange(sortedData, 10);
+  const range = calculateRange(sortedData,pageData);
   setTableRange([...range]);
 
-  const slice = sliceData(sortedData, page, 10);
+  const slice = sliceData(sortedData, page, pageData);
   setSlice([...slice]);
 
   
-}, [searchTerm, search, data, sortConfig,page]);
+}, [searchTerm, search, data, sortConfig,page,pageData]);
 
 useEffect(() => {
   if (slice.length < 1 && page !== 1) {
@@ -185,6 +188,22 @@ const openMenu = () => {
   setCurrentId(-1)
 };
 
+const dataPage = (value) => {
+  value !=="" && value !==null && value !== 0 ? setPageData(value) : setPageData(1)
+};
+
+const Halaman = () => {
+  const min = ((page -1) * pageData)+1;
+  const max = ((page -1) * pageData)+pageData;
+  console.log(max)
+  const maxx = max > searchResults.length ? searchResults.length : max ;
+  
+  return(
+      <>
+        <span className="font-semibold text-gray-900 dark:text-white">{min+'-'+maxx}</span>
+      </>)
+};
+
   return (
     <>
       <div className="container mx-auto">
@@ -207,6 +226,19 @@ const openMenu = () => {
     value={searchTerm}
     onChange={(e) => setSearchTerm(e.target.value)}
   />
+  <div className="flex flex-col items-center flex-column" aria-label="Table navigation">
+  <p className="text-xs font-bold dark:text-white">Data Per Page</p>
+  <input
+    type="text"
+    id="search"
+    name="search"
+    className="items-end text-center m-1 px-1 py-1 font-small text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+    placeholder="data"
+    value={pageData}
+    onChange={(e) => dataPage(e.target.value)}
+  />
+  </div>
+  
 </div>
 
         
@@ -436,20 +468,20 @@ const openMenu = () => {
             )}
             </tbody>
           </table>
-          <nav className="flex items-center flex-column px-6 py-5  flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
-  <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <span className="font-semibold text-gray-900 dark:text-white">1-10</span> of <span className="font-semibold text-gray-900 dark:text-white">1000</span></span>
-  <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-  {tableRange.map((el, index) => (
-    
-    <li>
-      <button  key={index} onClick={() => setPage(el)} className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" 
-      {...page === el ? '' : 'disable'}>{el}</button>
-    </li>
-    )
-    )}
-  {console.log(tableRange)}
-  </ul>
-</nav>
+          <div className="flex flex-col items-center flex-column px-6 py-5  justify-center pt-4" aria-label="Table navigation">
+          
+            <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+            {tableRange.map((el, index) => (
+              
+              <li key={el}>
+                <button   onClick={() => setPage(el)} className="flex items-center justify-center text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" 
+                >{el}</button>
+              </li>
+              )
+              )}
+            </ul>
+            <span className="items-start justify-center pt-4 text-sm font-normal items-left text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <Halaman/> of <span className="font-semibold text-gray-900 dark:text-white">{searchResults.length}</span></span>
+          </div>
 
         </div>
       </div>

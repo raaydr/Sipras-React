@@ -4,10 +4,20 @@ import Cookies from "js-cookie"
 import TableBarang from "../components/TableBarang";
 import FormBarang from "../components/FormBarang";
 import BarangModal from "../components/ModalBarang";
-
+import useBarangContext from "../context/BarangContext";
 
 const BarangContent = () => {
+    const { 
+        setFetchStatus
+        
+      } = useBarangContext();
 
+    useEffect(() => {
+    
+        setFetchStatus(true)
+        
+      
+      }, []) 
     return (
         <div>
             <BarangModal/>
