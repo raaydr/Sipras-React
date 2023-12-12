@@ -3,18 +3,20 @@ import axios from "../api/axios";
 import Cookies from "js-cookie";
 import useBarangContext from "../context/BarangContext";
 import { useToast, immediateToast } from "izitoast-react";
+import { useReactToPrint } from "react-to-print";
+
 
 
 export default function TableBarang () {
 
-    
+const componentPDF = useRef()
 const [data, setData] = useState([])
 const [searchResults, setSearchResults] = useState([]);
 const [search, setSearch] = useState({})
 const [searchTerm, setSearchTerm] = useState("");
 
 const [page, setPage] = useState(1);
-const [pageData, setPageData] = useState(1);
+const [pageData, setPageData] = useState(10);
 const [tableRange, setTableRange] = useState([]);
 const [slice, setSlice] = useState([]);
 
@@ -195,7 +197,7 @@ const dataPage = (value) => {
 const Halaman = () => {
   const min = ((page -1) * pageData)+1;
   const max = ((page -1) * pageData)+pageData;
-  console.log(max)
+  
   const maxx = max > searchResults.length ? searchResults.length : max ;
   
   return(
@@ -203,6 +205,18 @@ const Halaman = () => {
         <span className="font-semibold text-gray-900 dark:text-white">{min+'-'+maxx}</span>
       </>)
 };
+
+const generatePDF = useReactToPrint({
+  content : ()=>componentPDF.current,
+  documentTitle:"BarangList",
+  onAfterPrint:()=> immediateToast("success", {
+    title: "Test",
+    message: "download data :)",
+    theme: "light",
+    
+  })
+
+});
 
   return (
     <>
@@ -216,7 +230,13 @@ const Halaman = () => {
   >
     Create Barang
   </button>
-  
+  <button
+    type="button" onClick={generatePDF}
+    className="flex focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+  >
+    PDF
+  </button>
+    
   <input
     type="text"
     id="search"
@@ -243,7 +263,7 @@ const Halaman = () => {
 
         
             
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg" ref={componentPDF}>
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-white uppercase bg-purple-500 dark:bg-purple-500 dark:text-white">
               <tr>
