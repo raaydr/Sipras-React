@@ -17,6 +17,7 @@ const [searchTerm, setSearchTerm] = useState("");
 
 const [page, setPage] = useState(1);
 const [pageData, setPageData] = useState(10);
+const [dataPerPage, setDataPerPage] = useState("");
 const [tableRange, setTableRange] = useState([]);
 const [slice, setSlice] = useState([]);
 
@@ -191,12 +192,19 @@ const openMenu = () => {
 };
 
 const dataPage = (value) => {
-  value !=="" && value !==null && value !== 0 ? setPageData(value) : setPageData(1)
+  if(value !=="" && value !==null && value != 0){
+    if (/^\d+$/.test(value)) {
+      setPageData(value)
+      setDataPerPage(value)
+    }
+  }else{
+    setDataPerPage(value)
+  }
 };
 
 const Halaman = () => {
-  const min = ((page -1) * pageData)+1;
-  const max = ((page -1) * pageData)+pageData;
+  const min = parseInt(((page -1) * pageData)+1);
+  const max = (parseInt(min) + 1)+ parseInt(pageData);
   
   const maxx = max > searchResults.length ? searchResults.length : max ;
   
@@ -254,7 +262,7 @@ const generatePDF = useReactToPrint({
     name="search"
     className="items-end text-center m-1 px-1 py-1 font-small text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
     placeholder="data"
-    value={pageData}
+    value={dataPerPage}
     onChange={(e) => dataPage(e.target.value)}
   />
   </div>
