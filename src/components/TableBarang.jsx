@@ -134,7 +134,7 @@ useEffect(() => {
     });
   }
 
-  console.log(headers)
+  
   setHeaders(headers)
   const range = calculateRange(sortedData,pageData);
   setTableRange([...range]);
@@ -239,7 +239,82 @@ const generatePDF =  () => {
   doc.save("mypdf.pdf");
 };
 
+const Pagination = ({tableRange,page}) =>{
+  const pagination = [];
+  const visiblePages = 4;
+  const totalPages = tableRange.length
 
+  console.log(tableRange.length)
+    if (tableRange.length <= visiblePages+1 ) {
+      // Jika total halaman kurang dari atau sama dengan jumlah halaman yang terlihat
+      return(
+          <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+            {tableRange.map((el, index) => (
+              
+              <li key={el}>
+                <button   onClick={() => setPage(el)} className="flex items-center justify-center text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" 
+                >{el}</button>
+              </li>
+              )
+              )}
+          </ul>
+      )
+    } else {
+      // Menentukan posisi awal dan akhir halaman yang terlihat
+      let startPage = Math.max(1, page - Math.floor(visiblePages / 2));
+      let endPage = Math.min(totalPages, startPage + visiblePages - 1);
+  
+      // Menambahkan titik-titik di sebelah kiri jika perlu
+      if (startPage > 1) {
+        pagination.push(1);
+        if (startPage > 2) {
+          pagination.push('...');
+        }
+      }
+  
+      // Menambahkan halaman yang terlihat
+      for (let i = startPage; i <= endPage; i++) {
+        pagination.push(i);
+      }
+  
+      // Menambahkan titik-titik di sebelah kanan jika perlu
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+          pagination.push('...');
+        }
+        pagination.push(totalPages);
+      }
+    
+      return(
+        <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+            {pagination.map((el, index) => (
+              <li key={index}>
+                 {el === '...' ? (
+                    // Render the button without onClick for '...'
+                    <button
+                      
+                      className="flex items-center justify-center text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                    >
+                      {el}
+                    </button>
+                  ) : (
+                    // Render the button with onClick for other page numbers
+                    <button
+                      onClick={() => setPage(el)}
+                      className="flex items-center justify-center text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                    >
+                      {el}
+                    </button>
+                  )}
+              </li>
+              )
+              )}
+        </ul>
+      )
+    }
+  
+    
+}
 
   return (
     <>
@@ -520,17 +595,7 @@ const generatePDF =  () => {
             </tbody>
           </table>
           <div className="flex flex-col items-center flex-column px-6 py-5  justify-center pt-4" aria-label="Table navigation">
-          
-            <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-            {tableRange.map((el, index) => (
-              
-              <li key={el}>
-                <button   onClick={() => setPage(el)} className="flex items-center justify-center text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" 
-                >{el}</button>
-              </li>
-              )
-              )}
-            </ul>
+            <Pagination tableRange={tableRange} page={page}/>
             <span className="items-start justify-center pt-4 text-sm font-normal items-left text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <Halaman/> of <span className="font-semibold text-gray-900 dark:text-white">{searchResults.length}</span></span>
           </div>
 
