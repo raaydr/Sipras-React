@@ -3,7 +3,8 @@ import axios from "../api/axios";
 import Cookies from "js-cookie";
 import useBarangContext from "../context/BarangContext";
 import { useToast, immediateToast } from "izitoast-react";
-import { useReactToPrint } from "react-to-print";
+import { jsPDF } from 'jspdf'; //or use your library of choice here
+import { CSVLink } from 'react-csv';
 
 
 
@@ -19,6 +20,7 @@ const [page, setPage] = useState(1);
 const [pageData, setPageData] = useState(10);
 const [dataPerPage, setDataPerPage] = useState("");
 const [tableRange, setTableRange] = useState([]);
+const [headers, setHeaders] = useState([]);
 const [slice, setSlice] = useState([]);
 
 const [sortConfig, setSortConfig] = useState({ key: null, direction: null,type:null });
@@ -123,6 +125,17 @@ useEffect(() => {
 
   setSearchResults(sortedData);
 
+  const headers = []
+  const uniqueKeys = [...new Set(data.flatMap(item => Object.keys(item)))];
+  for (let i = 0; i < uniqueKeys.length; i++) {
+    headers.push({
+      label: uniqueKeys[i].toUpperCase().replace(/ /g, '_'),
+      key: uniqueKeys[i],
+    });
+  }
+
+  console.log(headers)
+  setHeaders(headers)
   const range = calculateRange(sortedData,pageData);
   setTableRange([...range]);
 
@@ -214,17 +227,19 @@ const Halaman = () => {
       </>)
 };
 
-const generatePDF = useReactToPrint({
-  content : ()=>componentPDF.current,
-  documentTitle:"BarangList",
-  onAfterPrint:()=> immediateToast("success", {
-    title: "Test",
-    message: "download data :)",
-    theme: "light",
-    
-  })
+const generatePDF =  () => {
+  const doc = new jsPDF({ orientation: "landscape" });
 
-});
+  doc.autoTable({
+    html: "#my-table",
+  });
+
+  
+
+  doc.save("mypdf.pdf");
+};
+
+
 
   return (
     <>
@@ -243,6 +258,14 @@ const generatePDF = useReactToPrint({
     className="flex focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
   >
     PDF
+  </button>
+  <button
+    type="button" 
+    className="flex focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+  >
+    <CSVLink data={searchResults} headers={headers} filename={'exported-data.csv'}>
+          CSV
+        </CSVLink>
   </button>
     
   <input
@@ -271,8 +294,8 @@ const generatePDF = useReactToPrint({
 
         
             
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg" ref={componentPDF}>
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg"  ref={componentPDF}>
+          <table id="my-table" className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-white uppercase bg-purple-500 dark:bg-purple-500 dark:text-white">
               <tr>
                 <th scope="col" className="px-6 py-3">
