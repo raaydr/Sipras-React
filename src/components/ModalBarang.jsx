@@ -17,7 +17,7 @@ const BarangModal = () => {
     useEffect(() => {
         //fetch data dengan kondisi
         if (currentId !== -1) {
-        console.log(currentId)
+        
         const token = Cookies.get('tokenku')
         axios.get(`/api/detail-barang/${currentId}`,{ headers: {"Authorization" : `Bearer ${token}`} })
           .then((res) => {
@@ -74,9 +74,9 @@ const BarangModal = () => {
       };
     
       const closeMenu = () => {
-        console.log(isMenuOpen)
+        
         setMenuOpen(false);
-        console.log(isMenuOpen)
+        
       };
       const data = {nama_barang, kode_barang,tipe_barang,satuan_barang,keterangan};
       const HandleSubmit = (event) => {

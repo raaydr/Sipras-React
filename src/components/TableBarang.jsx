@@ -43,13 +43,55 @@ const [tableRange, setTableRange] = useState([]);
 
 const { fetchStatus, setFetchStatus, setCurrentId,deletedata, setMenuOpen} = useBarangContext();
 
+const dataArray = [
+  { label: "No", key: "no", show: true },
+  { label: "Nama Barang", key: "nama_barang", show: true },
+  { label: "Kode Barang", key: "kode_barang", show: true },
+  { label: "Tipe Barang", key: "tipe_barang", show: true },
+  { label: "Satuan Barang", key: "satuan_barang", show: true },
+  { label: "Jumlah", key: "jumlah", show: true },
+  { label: "Rusak", key: "rusak", show: true },
+  { label: "User Name", key: "user_name", show: true },
+  { label: "EditedBy Name", key: "editedBy_name", show: true },
+  { label: "Action", key: "action", show: true },
+  
+];
+const [coba, setCoba] = useState(true);
+const [products, setProducts] = useState(dataArray);
+
+const handleCheckbox = (key) => {
+  const indexToUpdate = products.findIndex(item => item.key === key);
+  const val = products[indexToUpdate].show;
+  products[indexToUpdate].show = !val;
+ 
+  setProducts([...products]); // create a new array to trigger a re-render
+  console.log(products)
+};
+
+const CheckboxValue = (key) => {
+  const indexToUpdate = products.findIndex(item => item.key === key);
+  const val = products[indexToUpdate].show
+  console.log(val)
+  return val;
+}
+
+useEffect(() => {
+  //fetch data dengan kondisi
+
+  console.log("berubah")
+
+
+}, [products]) 
 // Ambil Data dari API
 const fetchData =  () => {
     const token = Cookies.get('tokenku')
      axios.get("/api/data-barang",{ headers: {"Authorization" : `Bearer ${token}`} })
       .then((res) => {
-        setData([...res.data.data])
         
+        const indexData =  res.data.data.map((obj, index) => {
+          return { no: index + 1, ...obj };
+        });
+        setData(indexData)
       })
       .catch((error) => {
       })
@@ -132,15 +174,12 @@ useEffect(() => {
   });
   setSearchResults(sortedData);
 
-  const indexData =  sortedData.map((obj, index) => {
-    return { number: index + 1, ...obj };
-  });
-
+  
   // Pagination dan Potong-potong data biar rapi
-  const range = calculateRange(indexData,pageData);
+  const range = calculateRange(sortedData,pageData);
   setTableRange([...range]);
 
-  const slice = sliceData(indexData, page, pageData);
+  const slice = sliceData(sortedData, page, pageData);
   setSlice([...slice]);
 
   // Ini cuma buat ambil key yg sebagai header dari data yg di fetch. Buat bikin file CSV
@@ -148,13 +187,14 @@ useEffect(() => {
   const uniqueKeys = [...new Set(data.flatMap(item => Object.keys(item)))];
   for (let i = 0; i < uniqueKeys.length; i++) {
     headers.push({
-      label: uniqueKeys[i].toUpperCase().replace(/ /g, '_'),
+      label: uniqueKeys[i].replace(/_/g, ' ').replace(/\b\w/g, match => match.toUpperCase()),
       key: uniqueKeys[i],
+      show: true,
     });
   }
   setHeaders(headers)
   
-  
+
 }, [searchTerm, search, data, sortConfig,page,pageData]);
 
 // Buat buka data sesuai page berapa di pagination
@@ -208,12 +248,18 @@ const handleEdit = (event) => {
   setMenuOpen(true);
 
   setCurrentId(idData)
+  
 }
 
 const openMenu = () => {
     
   setMenuOpen(true);
   setCurrentId(-1)
+  const val = products[0].show
+  products[0].show = !val
+  setProducts(products)
+  setCoba(!coba)
+  
 };
 
 const dataPage = (value) => {
@@ -360,17 +406,33 @@ const Pagination = ({tableRange,page}) =>{
           {/* Dropdown menu */}
           <div id="dropdown" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 placement-bottom">
             <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+            
               <li>
-                <input id="default-checkbox" type="checkbox" value="" className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Settings
+              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("nama_barang")} onChange={() =>handleCheckbox("nama_barang")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Barang
               </li>
               <li>
-              <input id="default-checkbox" type="checkbox" value="" className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Settings
+              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("kode_barang")} onChange={() =>handleCheckbox("kode_barang")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Kode
               </li>
               <li>
-              <input id="default-checkbox" type="checkbox" value="" className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Settings
+              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("tipe_barang")} onChange={() =>handleCheckbox("tipe_barang")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Tipe
               </li>
               <li>
-              <input id="default-checkbox" type="checkbox" value="" className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Settings
+              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("satuan_barang")} onChange={() =>handleCheckbox("satuan_barang")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Satuan
+              </li>
+              <li>
+              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("jumlah")} onChange={() =>handleCheckbox("jumlah")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Jumlah
+              </li>
+              <li>
+              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("rusak")} onChange={() =>handleCheckbox("rusak")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Rusak
+              </li>
+              <li>
+              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("user_name")} onChange={() =>handleCheckbox("user_name")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>CreatedBy
+              </li>
+              <li>
+              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("editedBy_name")} onChange={() =>handleCheckbox("editedBy_name")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>EditedBy
+              </li>
+              <li>
+              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("action")} onChange={() =>handleCheckbox("action")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Action
               </li>
             </ul>
           </div>
@@ -402,10 +464,10 @@ const Pagination = ({tableRange,page}) =>{
         <table id="my-table" className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-white uppercase bg-purple-500 dark:bg-purple-500 dark:text-white">
               <tr>
-                  <th scope="col" className="px-6 py-3">
+              <th scope="col" className={`px-6 py-3 ${products[0].show ? 'show' : 'hidden'}`}>
                     No
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className={`px-6 py-4 ${products[1].show ? 'show' : 'hidden'} `}>
                     <input
                       type="text"
                       value={searchNamaBarang}
@@ -427,7 +489,7 @@ const Pagination = ({tableRange,page}) =>{
                       />
                   </th>
 
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className={`px-6 py-3 ${CheckboxValue("kode_barang") ? 'show' : 'hidden'} `}>
                     <input
                     type="text"
                     value={searchKode}
@@ -449,7 +511,7 @@ const Pagination = ({tableRange,page}) =>{
                     />
                   </th>
 
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className={`px-6 py-3 ${CheckboxValue("tipe_barang") ? 'show' : 'hidden'} `}>
                     <input
                     type="text"
                     value={searchTipeBarang}
@@ -471,7 +533,7 @@ const Pagination = ({tableRange,page}) =>{
                     />
                   </th>
 
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className={`px-6 py-3 ${CheckboxValue("jumlah") ? 'show' : 'hidden'} `}>
                     <input
                     type="text"
                     value={searchJumlah}
@@ -492,7 +554,7 @@ const Pagination = ({tableRange,page}) =>{
                     />
                   </th>
 
-                  <th scope="flex" className="px-6 py-3">
+                  <th scope="flex" className={`px-6 py-3 ${CheckboxValue("rusak") ? 'show' : 'hidden'} `}>
                     <input
                     type="text"
                     value={searchRusak}
@@ -515,7 +577,7 @@ const Pagination = ({tableRange,page}) =>{
                     />
                   </th>
 
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className={`px-6 py-3 ${CheckboxValue("user_name") ? 'show' : 'hidden'} `}>
                     <input
                     type="text"
                     value={searchCreated}
@@ -538,7 +600,7 @@ const Pagination = ({tableRange,page}) =>{
                     />
                   </th>
 
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className={`px-6 py-3 ${CheckboxValue("editedBy_name") ? 'show' : 'hidden'} `}>
                     <input
                     type="text"
                     value={searchEdited}
@@ -561,7 +623,7 @@ const Pagination = ({tableRange,page}) =>{
                     />
                   </th>
                   
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className={`px-6 py-3 ${CheckboxValue("action") ? 'show' : 'hidden'} `}>
                     ACTION
                   </th>
               </tr>
@@ -569,34 +631,34 @@ const Pagination = ({tableRange,page}) =>{
             <tbody>
             {slice.length > 0 ? (
           // Menampilkan hasil pencarian jika ditemukan
-          slice.map((res,Index) => (
+          slice.map((res) => (
             <tr key ={res.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {res.number}
+                <th scope="row" className="px-6 py-4">
+                  {res.no}
                 </th>
-                <td className="px-6 py-4">
+                <td className={`px-6 py-4 ${CheckboxValue("nama_barang") ? 'show' : 'hidden'} `}>
                 {res.nama_barang }
                 </td>
-                <td className="px-6 py-4">
+                <td className={`px-6 py-4 ${CheckboxValue("kode_barang") ? 'show' : 'hidden'} `}>
                 {res.kode_barang}
                 </td>
-                <td className="px-6 py-4">
+                <td className={`px-6 py-4 ${CheckboxValue("tipe_barang") ? 'show' : 'hidden'} `}>
                 {res.tipe_barang}
                 </td>
-                <td className="px-6 py-4">
+                <td className={`px-6 py-4 ${CheckboxValue("jumlah") ? 'show' : 'hidden'} `}>
                 {res.jumlah}
                 </td>
-                <td className="px-6 py-4">
+                <td className={`px-6 py-4 ${CheckboxValue("rusak") ? 'show' : 'hidden'} `}>
                 {res.rusak }
                 </td>
-                <td className="px-6 py-4">
+                <td className={`px-6 py-4 ${CheckboxValue("user_name") ? 'show' : 'hidden'} `}>
                 {res.user_name}
                 </td>
-                <td className="px-6 py-4">
+                <td className={`px-6 py-4 ${CheckboxValue("editedBy_name") ? 'show' : 'hidden'} `}>
                 {res.editedBy_name}
                 </td>
                 
-                <td className="px-6 py-4">
+                <td className={`px-6 py-4 ${CheckboxValue("action") ? 'show' : 'hidden'} `}>
                   <button onClick={handleEdit} value={res.id} className="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900">Edit</button>
                   <button onClick={handleDelete} value={res.id} className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
                 </td>
