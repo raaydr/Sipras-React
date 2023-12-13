@@ -6,10 +6,13 @@ import { useToast, immediateToast } from "izitoast-react";
 import { jsPDF } from 'jspdf'; //or use your library of choice here
 import 'jspdf-autotable';
 import { CSVLink } from 'react-csv';
+import { initFlowbite } from 'flowbite';
 
 
 
 export default function TableBarang () {
+
+  
 //Ambil dari Hasil Fetch
 const [data, setData] = useState([])
 
@@ -57,7 +60,7 @@ useEffect(() => {
   
   
   if (fetchStatus === true) {
-    
+    initFlowbite();
     fetchData()
     
   }
@@ -129,11 +132,15 @@ useEffect(() => {
   });
   setSearchResults(sortedData);
 
+  const indexData =  sortedData.map((obj, index) => {
+    return { number: index + 1, ...obj };
+  });
+
   // Pagination dan Potong-potong data biar rapi
-  const range = calculateRange(sortedData,pageData);
+  const range = calculateRange(indexData,pageData);
   setTableRange([...range]);
 
-  const slice = sliceData(sortedData, page, pageData);
+  const slice = sliceData(indexData, page, pageData);
   setSlice([...slice]);
 
   // Ini cuma buat ambil key yg sebagai header dari data yg di fetch. Buat bikin file CSV
@@ -345,7 +352,29 @@ const Pagination = ({tableRange,page}) =>{
                   CSV
                 </CSVLink>
           </button>
-    
+          
+          <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">Table Show <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m1 1 4 4 4-4" />
+            </svg>
+          </button>
+          {/* Dropdown menu */}
+          <div id="dropdown" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 placement-bottom">
+            <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+              <li>
+                <input id="default-checkbox" type="checkbox" value="" className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Settings
+              </li>
+              <li>
+              <input id="default-checkbox" type="checkbox" value="" className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Settings
+              </li>
+              <li>
+              <input id="default-checkbox" type="checkbox" value="" className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Settings
+              </li>
+              <li>
+              <input id="default-checkbox" type="checkbox" value="" className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Settings
+              </li>
+            </ul>
+          </div>
+
           <input
             type="text"
             id="search"
@@ -373,167 +402,168 @@ const Pagination = ({tableRange,page}) =>{
         <table id="my-table" className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-white uppercase bg-purple-500 dark:bg-purple-500 dark:text-white">
               <tr>
-                <th scope="col" className="px-6 py-3">
-                  No</th>
                   <th scope="col" className="px-6 py-3">
-                  <input
-                  type="text"
-                  value={searchNamaBarang}
-                  onChange={(e) => {
-                    setsearchNamaBarang(e.target.value)
-                    handleSearch(e.target.value)
-                    }
-                  }
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Search"
-                  
-                  />
-                  <SortableHeader
-                    columnKey="nama_barang"
-                    columnType="string"
-                    sortConfig={sortConfig}
-                    name="Barang"
-                    onSort={handleSort}
-                  />
-                </th>
+                    No
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    <input
+                      type="text"
+                      value={searchNamaBarang}
+                      onChange={(e) => {
+                        setsearchNamaBarang(e.target.value)
+                        handleSearch(e.target.value)
+                        }
+                      }
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Search"
+                      
+                      />
+                      <SortableHeader
+                        columnKey="nama_barang"
+                        columnType="string"
+                        sortConfig={sortConfig}
+                        name="Barang"
+                        onSort={handleSort}
+                      />
+                  </th>
 
-                <th scope="col" className="px-6 py-3">
-                  <input
-                  type="text"
-                  value={searchKode}
-                  onChange={(e) => {
-                    setsearchKode(e.target.value)
-                    handleSearch(e.target.value)
+                  <th scope="col" className="px-6 py-3">
+                    <input
+                    type="text"
+                    value={searchKode}
+                    onChange={(e) => {
+                      setsearchKode(e.target.value)
+                      handleSearch(e.target.value)
+                      }
                     }
-                  }
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="search"
-                  
-                  />
-                  <SortableHeader
-                    columnKey="kode_barang"
-                    columnType="string"
-                    sortConfig={sortConfig}
-                    name="Kode"
-                    onSort={handleSort}
-                  />
-                </th>
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="search"
+                    
+                    />
+                    <SortableHeader
+                      columnKey="kode_barang"
+                      columnType="string"
+                      sortConfig={sortConfig}
+                      name="Kode"
+                      onSort={handleSort}
+                    />
+                  </th>
 
-                <th scope="col" className="px-6 py-3">
-                  <input
-                  type="text"
-                  value={searchTipeBarang}
-                  onChange={(e) => {
-                    setsearchTipeBarang(e.target.value)
-                    handleSearch(e.target.value)
+                  <th scope="col" className="px-6 py-3">
+                    <input
+                    type="text"
+                    value={searchTipeBarang}
+                    onChange={(e) => {
+                      setsearchTipeBarang(e.target.value)
+                      handleSearch(e.target.value)
+                      }
                     }
-                  }
-                  
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Search"
-                  />
-                  <SortableHeader
-                    columnKey="tipe_barang"
-                    columnType="string"
-                    name="Tipe"
-                    sortConfig={sortConfig}
-                    onSort={handleSort}
-                  />
-                </th>
+                    
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Search"
+                    />
+                    <SortableHeader
+                      columnKey="tipe_barang"
+                      columnType="string"
+                      name="Tipe"
+                      sortConfig={sortConfig}
+                      onSort={handleSort}
+                    />
+                  </th>
 
-                <th scope="col" className="px-6 py-3">
-                  <input
-                  type="text"
-                  value={searchJumlah}
-                  onChange={(e) => {
-                    setsearchJumlah(e.target.value)
-                    handleSearch(e.target.value)
+                  <th scope="col" className="px-6 py-3">
+                    <input
+                    type="text"
+                    value={searchJumlah}
+                    onChange={(e) => {
+                      setsearchJumlah(e.target.value)
+                      handleSearch(e.target.value)
+                      }
                     }
-                  }
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="search"
-                  />
-                  <SortableHeader
-                    columnKey="jumlah"
-                    columnType="number"
-                    name="Jumlah"
-                    sortConfig={sortConfig}
-                    onSort={handleSort}
-                  />
-                </th>
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="search"
+                    />
+                    <SortableHeader
+                      columnKey="jumlah"
+                      columnType="number"
+                      name="Jumlah"
+                      sortConfig={sortConfig}
+                      onSort={handleSort}
+                    />
+                  </th>
 
-                <th scope="flex" className="px-6 py-3">
-                  <input
-                  type="text"
-                  value={searchRusak}
-                  onChange={(e) => {
-                    setsearchRusak(e.target.value)
-                    handleSearch(e.target.value)
+                  <th scope="flex" className="px-6 py-3">
+                    <input
+                    type="text"
+                    value={searchRusak}
+                    onChange={(e) => {
+                      setsearchRusak(e.target.value)
+                      handleSearch(e.target.value)
+                      }
                     }
-                  }
-                  
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="search"
-                  
-                  />
-                  <SortableHeader
-                    columnKey="rusak"
-                    columnType="number"
-                    name="Rusak"
-                    sortConfig={sortConfig}
-                    onSort={handleSort}
-                  />
-                </th>
+                    
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="search"
+                    
+                    />
+                    <SortableHeader
+                      columnKey="rusak"
+                      columnType="number"
+                      name="Rusak"
+                      sortConfig={sortConfig}
+                      onSort={handleSort}
+                    />
+                  </th>
 
-                <th scope="col" className="px-6 py-3">
-                  <input
-                  type="text"
-                  value={searchCreated}
-                  onChange={(e) => {
-                    setsearchCreated(e.target.value)
-                    handleSearch(e.target.value)
+                  <th scope="col" className="px-6 py-3">
+                    <input
+                    type="text"
+                    value={searchCreated}
+                    onChange={(e) => {
+                      setsearchCreated(e.target.value)
+                      handleSearch(e.target.value)
+                      }
                     }
-                  }
-                  
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="search"
-                  
-                  />
-                  <SortableHeader
-                    columnKey="user_name"
-                    columnType="string"
-                    name="Created"
-                    sortConfig={sortConfig}
-                    onSort={handleSort}
-                  />
-                </th>
+                    
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="search"
+                    
+                    />
+                    <SortableHeader
+                      columnKey="user_name"
+                      columnType="string"
+                      name="Created"
+                      sortConfig={sortConfig}
+                      onSort={handleSort}
+                    />
+                  </th>
 
-                <th scope="col" className="px-6 py-3">
-                  <input
-                  type="text"
-                  value={searchEdited}
-                  onChange={(e) => {
-                    setsearchEdited(e.target.value)
-                    handleSearch(e.target.value)
+                  <th scope="col" className="px-6 py-3">
+                    <input
+                    type="text"
+                    value={searchEdited}
+                    onChange={(e) => {
+                      setsearchEdited(e.target.value)
+                      handleSearch(e.target.value)
+                      }
                     }
-                  }
+                    
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="search"
+                    
+                    />
+                    <SortableHeader
+                      columnKey="editedBy_name"
+                      columnType="string"
+                      name="Edited"
+                      sortConfig={sortConfig}
+                      onSort={handleSort}
+                    />
+                  </th>
                   
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="search"
-                  
-                  />
-                  <SortableHeader
-                    columnKey="editedBy_name"
-                    columnType="string"
-                    name="Edited"
-                    sortConfig={sortConfig}
-                    onSort={handleSort}
-                  />
-                </th>
-                
-                <th scope="col" className="px-6 py-3">
-                  ACTION
-                </th>
+                  <th scope="col" className="px-6 py-3">
+                    ACTION
+                  </th>
               </tr>
             </thead>
             <tbody>
@@ -542,7 +572,7 @@ const Pagination = ({tableRange,page}) =>{
           slice.map((res,Index) => (
             <tr key ={res.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {Index + 1}
+                  {res.number}
                 </th>
                 <td className="px-6 py-4">
                 {res.nama_barang }
