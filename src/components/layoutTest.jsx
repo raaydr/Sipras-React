@@ -19,23 +19,25 @@ function LayoutTest({children}) {
                                 </svg>
                             </button>
                             <Link to="/" className="flex ms-2 md:me-24">
-                                <img src="https://flowbite.com/docs/images/logo.svg" className="h-8 me-3" alt="FlowBite Logo" />
-                                <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Flowbite</span>
+                                <img src="https://matheusrumetna.com/wp-content/uploads/2019/07/sistem-informasi.png" className="h-8 me-3" alt="FlowBite Logo" />
+                                <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Siprasmi</span>
                             </Link>
                             </div>
                             <div className="flex items-center">
                             <div className="flex items-center ms-3">
                                 <div>
-                                <button type="button" className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
-                                    <span className="sr-only">Open user menu</span>
-                                    <img className="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo" />
+                                <button type="button" className="flex text-sm bg-white-800 rounded-full " aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                                <p className="text-sm text-gray-900 dark:text-white" role="none">
+                                    {user.name} 
+                                    </p>
+                                    <svg className="w-3 h-6 ml-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
+                                    </svg>
                                 </button>
                                 </div>
                                 <div className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
                                 <div className="px-4 py-3" role="none">
-                                    <p className="text-sm text-gray-900 dark:text-white" role="none">
-                                    {user.name}
-                                    </p>
+                                    
                                     <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
                                     {user.email}
                                     </p>
@@ -52,8 +54,8 @@ function LayoutTest({children}) {
                         </div>
                         </div>
                     </nav>
-                    <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-gray-100 border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
-                        <div className="h-full px-3 pb-4 overflow-y-auto bg-gray-100 dark:bg-gray-800">
+                    <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-blue-100 border-r border-blue-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
+                        <div className="h-full px-3 pb-4 overflow-y-auto bg-blue-100 dark:bg-blue-800">
                         <ul className="space-y-2 font-medium">
                             <li>
                             <Link to="/dashboard/" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">

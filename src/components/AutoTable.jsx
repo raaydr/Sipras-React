@@ -10,7 +10,7 @@ import { initFlowbite } from 'flowbite';
 
 
 
-export default function TableBarang () {
+export default function AutoTable () {
 
   
 //Ambil dari Hasil Fetch
