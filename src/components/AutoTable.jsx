@@ -10,7 +10,7 @@ import { initFlowbite } from 'flowbite';
 
 
 
-export default function AutoTable () {
+export default function AutoTable (props) {
 
   
 //Ambil dari Hasil Fetch
@@ -27,6 +27,7 @@ const [searchJumlah, setsearchJumlah] = useState("");
 const [searchRusak, setsearchRusak] = useState("");
 const [searchCreated, setsearchCreated] = useState("");
 const [searchEdited, setsearchEdited] = useState("");
+const [searchValues, setSearchValues] = useState({});
 
 const [searchResults, setSearchResults] = useState([]);
 const [search, setSearch] = useState({})
@@ -40,24 +41,16 @@ const [page, setPage] = useState(1);
 const [pageData, setPageData] = useState(10);
 const [dataPerPage, setDataPerPage] = useState("");
 const [tableRange, setTableRange] = useState([]);
+const [fetchStatus, setFetchStatus] = useState(true)
+const { setCurrentId,deletedata, setMenuOpen} = useBarangContext();
 
-const { fetchStatus, setFetchStatus, setCurrentId,deletedata, setMenuOpen} = useBarangContext();
 
-const dataArray = [
-  { label: "No", key: "no", show: true },
-  { label: "Nama Barang", key: "nama_barang", show: true },
-  { label: "Kode Barang", key: "kode_barang", show: true },
-  { label: "Tipe Barang", key: "tipe_barang", show: true },
-  { label: "Satuan Barang", key: "satuan_barang", show: true },
-  { label: "Jumlah", key: "jumlah", show: true },
-  { label: "Rusak", key: "rusak", show: true },
-  { label: "User Name", key: "user_name", show: true },
-  { label: "EditedBy Name", key: "editedBy_name", show: true },
-  { label: "Action", key: "action", show: true },
-  
-];
+
+
+
+const [history, setHistory] = useState(props.dataArray);
 const [coba, setCoba] = useState(true);
-const [products, setProducts] = useState(dataArray);
+const [products, setProducts] = useState(props.dataArray);
 
 const handleCheckbox = (key) => {
   const indexToUpdate = products.findIndex(item => item.key === key);
@@ -65,7 +58,7 @@ const handleCheckbox = (key) => {
   products[indexToUpdate].show = !val;
  
   setProducts([...products]); // create a new array to trigger a re-render
-  console.log(products)
+  //console.log(products)
 };
 
 const CheckboxValue = (key) => {
@@ -77,14 +70,14 @@ const CheckboxValue = (key) => {
 useEffect(() => {
   //fetch data dengan kondisi
 
-  console.log("berubah")
+  //console.log("berubah")
 
 
 }, [products]) 
 // Ambil Data dari API
 const fetchData =  () => {
     const token = Cookies.get('tokenku')
-     axios.get("/api/data-barang",{ headers: {"Authorization" : `Bearer ${token}`} })
+     axios.get(props.url,{ headers: {"Authorization" : `Bearer ${token}`} })
       .then((res) => {
         
         const indexData =  res.data.data.map((obj, index) => {
@@ -112,8 +105,36 @@ useEffect(() => {
 
 // Sorting, Search, dan Pagination data
 useEffect(() => {
+
+  const headers = []
+  const uniqueKeys = [...new Set(data.flatMap(item => Object.keys(item)))];
+  for (let i = 0; i < uniqueKeys.length; i++) {
+    headers.push({
+      label: uniqueKeys[i].replace(/_/g, ' ').replace(/\b\w/g, match => match.toUpperCase()),
+      key: uniqueKeys[i],
+      show: true,
+    });
+  }
+  
+  setHeaders(headers)
+  const searchItems = []
+  for (let i = 0; i < props.dataArray.length; i++) {
+    if(props.dataArray[i].type != false)
+    searchItems.push(props.dataArray[i].key);
+  }
+  
+  console.log(searchItems)
   // Search berdasarkan pencarian semua
-  const results = data.filter(
+  
+  const results = data.filter((item) =>
+    
+  searchItems.some((key) => {
+        const value = item[key];
+        return value && value.toString().toLowerCase().includes(searchTerm.toLowerCase());
+      })
+
+  );
+  const results1 = data.filter(
     (item) =>
     (item.nama_barang && item.nama_barang.toLowerCase().includes(searchTerm.toLowerCase()))||
     (item.kode_barang && item.kode_barang.toLowerCase().includes(searchTerm.toLowerCase()))||
@@ -123,10 +144,17 @@ useEffect(() => {
       
 
   );
+  
   setSearchResults(results);
 
   //Search berdasarkan pencarian per column table
-  const result = results.filter(
+  const result = results.filter((item) =>
+  Object.entries(searchValues).every(([key, value]) => {
+    // Check if the property exists and if its value includes the filter value
+    return !value || (item[key] && item[key].toString().toLowerCase().includes(value.toLowerCase()));
+  })
+);
+  const result1 = results.filter(
     (item) =>
     (item.nama_barang && item.nama_barang.toLowerCase().includes(searchNamaBarang.toLowerCase()))&&
     (item.kode_barang && item.kode_barang.toLowerCase().includes(searchKode.toLowerCase()))&&
@@ -182,16 +210,7 @@ useEffect(() => {
   setSlice([...slice]);
 
   // Ini cuma buat ambil key yg sebagai header dari data yg di fetch. Buat bikin file CSV
-  const headers = []
-  const uniqueKeys = [...new Set(data.flatMap(item => Object.keys(item)))];
-  for (let i = 0; i < uniqueKeys.length; i++) {
-    headers.push({
-      label: uniqueKeys[i].replace(/_/g, ' ').replace(/\b\w/g, match => match.toUpperCase()),
-      key: uniqueKeys[i],
-      show: true,
-    });
-  }
-  setHeaders(headers)
+  
   
 
 }, [searchTerm, search, data, sortConfig,page,pageData]);
@@ -229,12 +248,26 @@ const sliceData = (data, page, rowsPerPage) => {
 };
 
 //handling input
-const handleSearch = (search) => {
+const handleSearch = (search,key) => {
   // targetin variable buat dibidik 
   setSearch({ ...search, search})
+  setSearchValues((prevSearchValues) => ({
+    ...prevSearchValues,
+    [key]: search,
+  }));
+  const edit = history;
+  const indexToUpdate = edit.findIndex(item => item.key === key);
+  
+  edit[indexToUpdate].search = search;
+ 
+  setHistory([...edit]); // create a new array to trigger a re-render
   
 }
 
+useEffect(() => {
+  
+  console.log(headers)
+}, [searchValues]);
 const handleDelete = (event) => {
   let idData = parseInt(event.target.value)
   deletedata(idData)
@@ -402,34 +435,16 @@ const Pagination = ({tableRange,page}) =>{
           {/* Dropdown menu */}
           <div id="dropdown" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 placement-bottom">
             <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-            
-              <li>
-              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("nama_barang")} onChange={() =>handleCheckbox("nama_barang")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Barang
-              </li>
-              <li>
-              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("kode_barang")} onChange={() =>handleCheckbox("kode_barang")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Kode
-              </li>
-              <li>
-              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("tipe_barang")} onChange={() =>handleCheckbox("tipe_barang")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Tipe
-              </li>
-              <li>
-              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("satuan_barang")} onChange={() =>handleCheckbox("satuan_barang")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Satuan
-              </li>
-              <li>
-              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("jumlah")} onChange={() =>handleCheckbox("jumlah")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Jumlah
-              </li>
-              <li>
-              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("rusak")} onChange={() =>handleCheckbox("rusak")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Rusak
-              </li>
-              <li>
-              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("user_name")} onChange={() =>handleCheckbox("user_name")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>CreatedBy
-              </li>
-              <li>
-              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("editedBy_name")} onChange={() =>handleCheckbox("editedBy_name")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>EditedBy
-              </li>
-              <li>
-              <input id="default-checkbox" type="checkbox" checked={CheckboxValue("action")} onChange={() =>handleCheckbox("action")} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>Action
-              </li>
+                {products && products.map((product,index) => { 
+                     return (
+                    <li key= {index + 1}>
+                        <input id="default-checkbox" type="checkbox" checked={CheckboxValue(product.key)} onChange={() =>handleCheckbox(product.key)} className="m-2 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>{product.label}
+                    </li>
+                     );
+                })}
+    
+              
+              
             </ul>
           </div>
 
@@ -463,161 +478,37 @@ const Pagination = ({tableRange,page}) =>{
               <th scope="col" className={`px-6 py-3 ${products[0].show ? 'show' : 'hidden'}`}>
                     No
                   </th>
-                  <th scope="col" className={`px-6 py-4 ${products[1].show ? 'show' : 'hidden'} `}>
-                    <input
-                      type="text"
-                      value={searchNamaBarang}
-                      onChange={(e) => {
-                        setsearchNamaBarang(e.target.value)
-                        handleSearch(e.target.value)
-                        }
-                      }
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Search"
-                      
-                      />
-                      <SortableHeader
-                        columnKey="nama_barang"
-                        columnType="string"
-                        sortConfig={sortConfig}
-                        name="Barang"
-                        onSort={handleSort}
-                      />
-                  </th>
-
-                  <th scope="col" className={`px-6 py-3 ${CheckboxValue("kode_barang") ? 'show' : 'hidden'} `}>
-                    <input
-                    type="text"
-                    value={searchKode}
-                    onChange={(e) => {
-                      setsearchKode(e.target.value)
-                      handleSearch(e.target.value)
-                      }
+                  {products.map((property,index) => {
+                    if (property.key !== "no" && property.key !== "action") {
+                    return (
+                        <th scope="col" className={`px-6 py-4 ${property.key ? 'show' : 'hidden'} `}>
+                            <input
+                            type="text"
+                            value={searchValues[property.key] || ''}
+                            
+                            onChange={(e) => {
+                                
+                                handleSearch(e.target.value,property.key)
+                                }
+                            }
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Search"
+                            
+                            />
+                            <SortableHeader
+                                columnKey={property.key}
+                                columnType={property.type}
+                                sortConfig={sortConfig}
+                                name={property.label}
+                                onSort={handleSort}
+                            />
+                        </th>
+                    );
                     }
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="search"
-                    
-                    />
-                    <SortableHeader
-                      columnKey="kode_barang"
-                      columnType="string"
-                      sortConfig={sortConfig}
-                      name="Kode"
-                      onSort={handleSort}
-                    />
-                  </th>
-
-                  <th scope="col" className={`px-6 py-3 ${CheckboxValue("tipe_barang") ? 'show' : 'hidden'} `}>
-                    <input
-                    type="text"
-                    value={searchTipeBarang}
-                    onChange={(e) => {
-                      setsearchTipeBarang(e.target.value)
-                      handleSearch(e.target.value)
-                      }
-                    }
-                    
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Search"
-                    />
-                    <SortableHeader
-                      columnKey="tipe_barang"
-                      columnType="string"
-                      name="Tipe"
-                      sortConfig={sortConfig}
-                      onSort={handleSort}
-                    />
-                  </th>
-
-                  <th scope="col" className={`px-6 py-3 ${CheckboxValue("jumlah") ? 'show' : 'hidden'} `}>
-                    <input
-                    type="text"
-                    value={searchJumlah}
-                    onChange={(e) => {
-                      setsearchJumlah(e.target.value)
-                      handleSearch(e.target.value)
-                      }
-                    }
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="search"
-                    />
-                    <SortableHeader
-                      columnKey="jumlah"
-                      columnType="number"
-                      name="Jumlah"
-                      sortConfig={sortConfig}
-                      onSort={handleSort}
-                    />
-                  </th>
-
-                  <th scope="flex" className={`px-6 py-3 ${CheckboxValue("rusak") ? 'show' : 'hidden'} `}>
-                    <input
-                    type="text"
-                    value={searchRusak}
-                    onChange={(e) => {
-                      setsearchRusak(e.target.value)
-                      handleSearch(e.target.value)
-                      }
-                    }
-                    
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="search"
-                    
-                    />
-                    <SortableHeader
-                      columnKey="rusak"
-                      columnType="number"
-                      name="Rusak"
-                      sortConfig={sortConfig}
-                      onSort={handleSort}
-                    />
-                  </th>
-
-                  <th scope="col" className={`px-6 py-3 ${CheckboxValue("user_name") ? 'show' : 'hidden'} `}>
-                    <input
-                    type="text"
-                    value={searchCreated}
-                    onChange={(e) => {
-                      setsearchCreated(e.target.value)
-                      handleSearch(e.target.value)
-                      }
-                    }
-                    
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="search"
-                    
-                    />
-                    <SortableHeader
-                      columnKey="user_name"
-                      columnType="string"
-                      name="Created"
-                      sortConfig={sortConfig}
-                      onSort={handleSort}
-                    />
-                  </th>
-
-                  <th scope="col" className={`px-6 py-3 ${CheckboxValue("editedBy_name") ? 'show' : 'hidden'} `}>
-                    <input
-                    type="text"
-                    value={searchEdited}
-                    onChange={(e) => {
-                      setsearchEdited(e.target.value)
-                      handleSearch(e.target.value)
-                      }
-                    }
-                    
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="search"
-                    
-                    />
-                    <SortableHeader
-                      columnKey="editedBy_name"
-                      columnType="string"
-                      name="Edited"
-                      sortConfig={sortConfig}
-                      onSort={handleSort}
-                    />
-                  </th>
+                    return null; // Skip rendering "No" and "Action" columns
+                })}
+                
+                  
                   
                   <th scope="col" className={`px-6 py-3 ${CheckboxValue("action") ? 'show' : 'hidden'} `}>
                     ACTION
@@ -629,30 +520,22 @@ const Pagination = ({tableRange,page}) =>{
           // Menampilkan hasil pencarian jika ditemukan
           slice.map((res) => (
             <tr key ={res.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" className="px-6 py-4">
+                <th scope="row" className={`px-6 py-4 ${CheckboxValue("no") ? 'show' : 'hidden'} `}>
                   {res.no}
                 </th>
-                <td className={`px-6 py-4 ${CheckboxValue("nama_barang") ? 'show' : 'hidden'} `}>
-                {res.nama_barang }
-                </td>
-                <td className={`px-6 py-4 ${CheckboxValue("kode_barang") ? 'show' : 'hidden'} `}>
-                {res.kode_barang}
-                </td>
-                <td className={`px-6 py-4 ${CheckboxValue("tipe_barang") ? 'show' : 'hidden'} `}>
-                {res.tipe_barang}
-                </td>
-                <td className={`px-6 py-4 ${CheckboxValue("jumlah") ? 'show' : 'hidden'} `}>
-                {res.jumlah}
-                </td>
-                <td className={`px-6 py-4 ${CheckboxValue("rusak") ? 'show' : 'hidden'} `}>
-                {res.rusak }
-                </td>
-                <td className={`px-6 py-4 ${CheckboxValue("user_name") ? 'show' : 'hidden'} `}>
-                {res.user_name}
-                </td>
-                <td className={`px-6 py-4 ${CheckboxValue("editedBy_name") ? 'show' : 'hidden'} `}>
-                {res.editedBy_name}
-                </td>
+                {products.map((property) => {
+                    if (property.key !== "no" && property.key !== "action") {
+                    return (
+                        <td
+                        key={property.key}
+                        className={`px-6 py-4 ${CheckboxValue(property.key) ? 'show' : 'hidden'}`}
+                        >
+                        {res[property.key]}
+                        </td>
+                    );
+                    }
+                    return null; // Skip rendering "No" and "Action" columns
+                })}
                 
                 <td className={`px-6 py-4 ${CheckboxValue("action") ? 'show' : 'hidden'} `}>
                   <button onClick={handleEdit} value={res.id} className="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900">Edit</button>
