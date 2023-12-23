@@ -1,7 +1,7 @@
 import React, { useState,useEffect,useRef } from "react";
 import axios from "../api/axios";
 import Cookies from "js-cookie";
-import useBarangContext from "../context/BarangContext";
+import usePerlengkapanContext from "../context/PerlengkapanContext";
 import { useToast, immediateToast } from "izitoast-react";
 import { jsPDF } from 'jspdf'; //or use your library of choice here
 import 'jspdf-autotable';
@@ -10,7 +10,7 @@ import { initFlowbite } from 'flowbite';
 
 
 
-export default function AutoTable (props) {
+export default function TablePerlengkapan (props) {
 
   
 //Ambil dari Hasil Fetch
@@ -36,8 +36,8 @@ const [dataPerPage, setDataPerPage] = useState("");
 const [tableRange, setTableRange] = useState([]);
 const [fetchStatus, setFetchStatus] = useState(true)
 
-const [currentId, setCurrentId] = useState(-1)
-const {deletedata,setMenuOpen} = useBarangContext();
+
+const {setCurrentId,deletedata,setMenuOpen} = usePerlengkapanContext();
 
 
 
