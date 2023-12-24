@@ -9,6 +9,7 @@ const PerlengkapanModal = () => {
     const {currentId, errors, setErrors,isMenuOpen, setMenuOpen,createdata,editdata,iziStatus, setiziStatus} = usePerlengkapanContext();
     const [nama_barang, setnama_barang]= useState("");
     const [kode_barang , setkode_barang ]= useState("");
+    const [barang_id , setbarang_id ]= useState("");
     const [tipe_barang , settipe_barang ]= useState("");
     const [satuan_barang , setsatuan_barang ]= useState("");
     const [keterangan  , setketerangan  ]= useState("");
@@ -45,13 +46,18 @@ const PerlengkapanModal = () => {
     const handleInputChange = (event) => {
       const query = event.target.value;
       setSearchTerm(query);
+      if(query === ""){
+        setkode_barang(query);
+        setbarang_id(query);
+      }
       setShowDropdown(true);
       handleSearch(query);
     };
   
     const handleSelect = (result) => {
-      setSearchTerm(result);
-      setnama_barang(result);
+      setSearchTerm(result.nama_barang);
+      setkode_barang(result.kode_barang);
+      setbarang_id(result.id);
       setShowDropdown(false);
     };
   
@@ -192,24 +198,22 @@ const PerlengkapanModal = () => {
                             <div className="p-4 md:p-5 space-y-4">
                                 <form   onSubmit={HandleSubmit}>
                                 
+                                    
                                     <div className="mb-6">
                                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Barang</label>
-                                        <input type="text" id="nama_barang" onChange={(e)=>setnama_barang(e.target.value)} value={nama_barang} name='nama_barang' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nama Barang" required />
-                                        {errors.nama_barang && <span style={{ color: 'red' }}>{errors.nama_barang}</span>}
-                                    </div>
-                                    <div className="mb-6">
-                                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode Barang</label>
                                         <input
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         type="text"
                                         value={searchTerm}
                                         onChange={handleInputChange}
                                         placeholder="Search..."
                                         />
                                         {showDropdown && (
-                                            <ul className="dropdown">
+                                          
+                                          <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
                                             {searchResults.slice(0, 5).map((result, index) => (
-                                                <li key={index} onClick={() => handleSelect(result.nama_barang)}>
-                                                {result.nama_barang}
+                                                <li key={index} >
+                                                  <button onClick={() => handleSelect(result)} class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{result.nama_barang}</button>
                                                 </li>
                                             ))}
                                             </ul>
@@ -217,9 +221,16 @@ const PerlengkapanModal = () => {
                                         <blockquote className="text-xs italic font-semibold text-start text-gray-900 dark:text-white">
                                             <p>"Kode barang harus unik(tidak boleh sama)"</p>
                                         </blockquote>
-                                        {errors.kode_barang && <span style={{ color: 'red' }}>{errors.kode_barang}</span>}
+                                        {errors.nama_barang && <span style={{ color: 'red' }}>{errors.nama_barang}</span>}
                                     </div>
-                                   
+                                    <div className="mb-6">
+                                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode Barang</label>
+                                        <input type="text" id="kode_barang" onChange={(e)=>setkode_barang(e.target.value)} value={kode_barang} name='kode_barang' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Kode Barang" readOnly required />
+                                        <input type="text" id="barang_id" onChange={(e)=>setbarang_id(e.target.value)} value={barang_id} name='barang_id'  hidden />
+                                        {errors.kode_barang && <span style={{ color: 'red' }}>{errors.kode_barang}</span>}
+                                        
+                                    </div>
+                                    
                                     
                                     <button type={'submit'} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 " >Submit</button>
                                 </form>

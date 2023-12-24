@@ -12,9 +12,6 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.14.19",
-    "@mui/material": "^5.14.20",
-    "@mui/x-date-pickers": "^6.18.4",
     "@popperjs/core": "^2.11.8",
     "axios": "^1.6.1",
     "flowbite": "^2.1.1",
