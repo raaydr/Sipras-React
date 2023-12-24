@@ -4,6 +4,13 @@ import usePerlengkapanContext from "../context/PerlengkapanContext";
 import axios from "../api/axios";
 import Cookies from "js-cookie"
 import { useToast, immediateToast } from "izitoast-react";
+
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { getMonth, getYear } from "date-fns";
+import range from "lodash/range";
+
 const PerlengkapanModal = () => {
     
     const {currentId, errors, setErrors,isMenuOpen, setMenuOpen,createdata,editdata,iziStatus, setiziStatus} = usePerlengkapanContext();
@@ -18,6 +25,25 @@ const PerlengkapanModal = () => {
     const [searchResults, setSearchResults] = useState([]);
     const [showDropdown, setShowDropdown] = useState(false);
     const [barang, setBarang] = useState([])
+
+
+    const [startDate, setStartDate] = useState(new Date());
+    
+    const years = range(1990, getYear(new Date()) + 1, 1);
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
 
     const fetchData =  () => {
         const token = Cookies.get('tokenku')
@@ -228,6 +254,62 @@ const PerlengkapanModal = () => {
                                         <input type="text" id="kode_barang" onChange={(e)=>setkode_barang(e.target.value)} value={kode_barang} name='kode_barang' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Kode Barang" readOnly required />
                                         <input type="text" id="barang_id" onChange={(e)=>setbarang_id(e.target.value)} value={barang_id} name='barang_id'  hidden />
                                         {errors.kode_barang && <span style={{ color: 'red' }}>{errors.kode_barang}</span>}
+                                        
+                                    </div>
+                                    <div className="mb-6">
+                                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Pembelian</label>
+                                        <DatePicker
+                                        renderCustomHeader={({
+                                          date,
+                                          changeYear,
+                                          changeMonth,
+                                          decreaseMonth,
+                                          increaseMonth,
+                                          prevMonthButtonDisabled,
+                                          nextMonthButtonDisabled,
+                                        }) => (
+                                          <div
+                                            style={{
+                                              margin: 10,
+                                              display: "flex",
+                                              justifyContent: "center",
+                                            }}
+                                          >
+                                            <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
+                                              {"<"}
+                                            </button>
+                                            <select
+                                              value={getYear(date)}
+                                              onChange={({ target: { value } }) => changeYear(value)}
+                                            >
+                                              {years.map((option) => (
+                                                <option key={option} value={option}>
+                                                  {option}
+                                                </option>
+                                              ))}
+                                            </select>
+
+                                            <select
+                                              value={months[getMonth(date)]}
+                                              onChange={({ target: { value } }) =>
+                                                changeMonth(months.indexOf(value))
+                                              }
+                                            >
+                                              {months.map((option) => (
+                                                <option key={option} value={option}>
+                                                  {option}
+                                                </option>
+                                              ))}
+                                            </select>
+
+                                            <button onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
+                                              {">"}
+                                            </button>
+                                          </div>
+                                        )}
+                                        selected={startDate}
+                                        onChange={(date) => setStartDate(date)}
+                                      />
                                         
                                     </div>
                                     
