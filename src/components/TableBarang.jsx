@@ -238,7 +238,7 @@ const handleSearch = (search) => {
 const handleDelete = (event) => {
   let idData = parseInt(event.target.value)
   deletedata(idData)
-  
+  setFetchStatus(true)
   
 }
 
