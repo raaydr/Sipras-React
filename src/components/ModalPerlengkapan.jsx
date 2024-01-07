@@ -6,7 +6,7 @@ import Cookies from "js-cookie"
 import { useToast, immediateToast } from "izitoast-react";
 
 
-import DatePicker from "react-datepicker";
+import DatePicker from "react-date-picker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getMonth, getYear } from "date-fns";
 import range from "lodash/range";
@@ -35,21 +35,7 @@ const PerlengkapanModal = () => {
 
     const [tanggal_pembelian, settanggal_pembelian] = useState(new Date());
     
-    const years = range(1990, getYear(new Date()) + 1, 1);
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
+    const [startDate, setStartDate] = useState(new Date());
 
   const [isCheckedOne, setCheckedOne] = useState(false);
   const [isCheckedZero, setCheckedZero] = useState(false);
@@ -60,13 +46,7 @@ const PerlengkapanModal = () => {
   const [kurangbagus, setKurangBagus] = useState(false);
   const [rusak, setRusak] = useState(false);
 
-  const handelTanggal = () => {
-
-    const datePart = tanggal_pembelian.split("T")[0];
-    settanggal_pembelian(datePart)
-
-    console.log(datePart)
-  };
+  
 
   const handleCheckboxBagus = () => {
     setBagus(!bagus);
@@ -254,7 +234,7 @@ const PerlengkapanModal = () => {
         tanggal_pembelian,lokasi_perlengkapan,departemen,kondisi_perlengkapan,leandable_perlengkapan,
         foto_perlengkapan};
       const HandleSubmit = (event) => {
-        handelTanggal()
+        
         event.preventDefault()
         if (validateForm()) {
             if(currentId === -1){
@@ -386,56 +366,7 @@ const PerlengkapanModal = () => {
                                     </div>
                                     <div className="mb-6">
                                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Pembelian</label>
-                                        <DatePicker
-                                        dateFormat="yyyy-MM-dd"
-                                        renderCustomHeader={({
-                                          date,
-                                          changeYear,
-                                          changeMonth,
-                                          decreaseMonth,
-                                          increaseMonth,
-                                          prevMonthButtonDisabled,
-                                          nextMonthButtonDisabled,
-                                        }) => (
-                                          <div
-                                            style={{
-                                              margin: 10,
-                                              display: "flex",
-                                              justifyContent: "center",
-                                            }}
-                                          >
-                                            
-                                            <select
-                                              value={getYear(date)}
-                                              onChange={({ target: { value } }) => changeYear(value)}
-                                            >
-                                              {years.map((option) => (
-                                                <option key={option} value={option}>
-                                                  {option}
-                                                </option>
-                                              ))}
-                                            </select>
-
-                                            <select
-                                              value={months[getMonth(date)]}
-                                              onChange={({ target: { value } }) =>
-                                                changeMonth(months.indexOf(value))
-                                              }
-                                            >
-                                              {months.map((option) => (
-                                                <option key={option} value={option}>
-                                                  {option}
-                                                </option>
-                                              ))}
-                                            </select>
-
-                                            
-                                          </div>
-                                        )}
-                                        
-                                        selected={tanggal_pembelian}
-                                        onChange={(date) => settanggal_pembelian(date)}
-                                      />
+                                        <DatePicker selected={tanggal_pembelian} onChange={(date) => settanggal_pembelian(date)} />
                                         
                                     </div>
                                     <div className="mb-6">
