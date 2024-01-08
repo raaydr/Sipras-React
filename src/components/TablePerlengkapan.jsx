@@ -38,7 +38,7 @@ const [tableRange, setTableRange] = useState([]);
 
 
 
-const {setCurrentId,deletedata,setMenuOpen,fetchStatus, setFetchStatus} = usePerlengkapanContext();
+const {setCurrentId,deletedata,setMenuOpen,fetchStatus, setFetchStatus,setiziStatus} = usePerlengkapanContext();
 
 
 
@@ -90,7 +90,7 @@ useEffect(() => {
     
   }
   setFetchStatus(false)
-
+  setiziStatus(null)
 }, [fetchStatus, setFetchStatus]) 
 
 

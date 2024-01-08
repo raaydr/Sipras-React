@@ -172,11 +172,12 @@ const PerlengkapanModal = () => {
         if (currentId !== -1) {
             
         const token = Cookies.get('tokenku')
-        axios.get(`/api/detail-barang/${currentId}`,{ headers: {"Authorization" : `Bearer ${token}`} })
+        axios.get(`/api/data-perlengkapan/${currentId}`,{ headers: {"Authorization" : `Bearer ${token}`} })
           .then((res) => {
             let data = res.data.data
+            console.log(data)
             setnama_barang(data.nama_barang);
-            setkode(data.kode_barang);
+            setkode(data.code);
             settipe_barang(data.tipe_barang);
             setsatuan_barang(data.satuan_barang);
             setketerangan_perlengkapan(data.keterangan_perlengkapan);
@@ -191,6 +192,7 @@ const PerlengkapanModal = () => {
             setsatuan_barang("");
             setketerangan_perlengkapan("");
         }
+        console.log(data);
     }, [currentId]) 
 
     useEffect(() => {
@@ -233,7 +235,7 @@ const PerlengkapanModal = () => {
       const closeMenu = () => {
         
         setMenuOpen(false);
-        
+        setkode("");
       };
       const data = {barang_id, jumlah_perlengkapan,harga_perlengkapan,keterangan_perlengkapan,kode,
         tanggal_pembelian,lokasi_perlengkapan,departemen,kondisi_perlengkapan,leandable_perlengkapan,
