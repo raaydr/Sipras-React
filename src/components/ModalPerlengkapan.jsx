@@ -1,3 +1,6 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable react/no-unknown-property */
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { useEffect, useState } from "react";
 import usePerlengkapanContext from "../context/PerlengkapanContext";
@@ -5,9 +8,11 @@ import axios from "../api/axios";
 import Cookies from "js-cookie"
 import { useToast, immediateToast } from "izitoast-react";
 
+import DatePicker from "react-datepicker";
 
-import DatePicker from "react-date-picker";
 import "react-datepicker/dist/react-datepicker.css";
+
+
 import { getMonth, getYear } from "date-fns";
 import range from "lodash/range";
 
@@ -16,7 +21,7 @@ const PerlengkapanModal = () => {
     const {currentId, errors, setErrors,isMenuOpen, setMenuOpen,createdata,editdata,iziStatus, setiziStatus} = usePerlengkapanContext();
     
     const [nama_barang, setnama_barang]= useState("");
-    const [kode_barang , setkode_barang ]= useState("");
+    const [kode , setkode ]= useState("");
     const [foto_perlengkapan , setfoto_perlengkapan ]= useState("");
     const [harga_perlengkapan , setharga_perlengkapan ]= useState(0);
     const [barang_id , setbarang_id ]= useState("");
@@ -33,7 +38,7 @@ const PerlengkapanModal = () => {
     const [barang, setBarang] = useState([])
 
 
-    const [tanggal_pembelian, settanggal_pembelian] = useState(new Date());
+    const [tanggal_pembelian, settanggal_pembelian] = useState("");
     
     const [startDate, setStartDate] = useState(new Date());
 
@@ -124,7 +129,7 @@ const PerlengkapanModal = () => {
       const query = event.target.value;
       setSearchTerm(query);
       if(query === ""){
-        setkode_barang(query);
+        setkode(query);
         setbarang_id(query);
       }
       setShowDropdown(true);
@@ -133,7 +138,7 @@ const PerlengkapanModal = () => {
   
     const handleSelect = (result) => {
       setSearchTerm(result.nama_barang);
-      setkode_barang(result.kode_barang);
+      setkode(result.kode_barang);
       setbarang_id(result.id);
       setShowDropdown(false);
     };
@@ -171,7 +176,7 @@ const PerlengkapanModal = () => {
           .then((res) => {
             let data = res.data.data
             setnama_barang(data.nama_barang);
-            setkode_barang(data.kode_barang);
+            setkode(data.kode_barang);
             settipe_barang(data.tipe_barang);
             setsatuan_barang(data.satuan_barang);
             setketerangan_perlengkapan(data.keterangan_perlengkapan);
@@ -181,7 +186,7 @@ const PerlengkapanModal = () => {
         
         }else{
             setnama_barang("");
-            setkode_barang("");
+            setkode("");
             settipe_barang("");
             setsatuan_barang("");
             setketerangan_perlengkapan("");
@@ -230,7 +235,7 @@ const PerlengkapanModal = () => {
         setMenuOpen(false);
         
       };
-      const data = {barang_id, jumlah_perlengkapan,harga_perlengkapan,keterangan_perlengkapan,
+      const data = {barang_id, jumlah_perlengkapan,harga_perlengkapan,keterangan_perlengkapan,kode,
         tanggal_pembelian,lokasi_perlengkapan,departemen,kondisi_perlengkapan,leandable_perlengkapan,
         foto_perlengkapan};
       const HandleSubmit = (event) => {
@@ -318,10 +323,10 @@ const PerlengkapanModal = () => {
                                         />
                                         {showDropdown && (
                                           
-                                          <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                                          <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
                                             {searchResults.slice(0, 5).map((result, index) => (
                                                 <li key={index} >
-                                                  <button onClick={() => handleSelect(result)} class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{result.nama_barang}</button>
+                                                  <button onClick={() => handleSelect(result)} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{result.nama_barang}</button>
                                                 </li>
                                             ))}
                                             </ul>
@@ -333,9 +338,9 @@ const PerlengkapanModal = () => {
                                     </div>
                                     <div className="mb-6">
                                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode Barang</label>
-                                        <input type="text" id="kode_barang" onChange={(e)=>setkode_barang(e.target.value)} value={kode_barang} name='kode_barang' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Kode Barang" readOnly required />
+                                        <input type="text" id="kode" onChange={(e)=>setkode(e.target.value)} value={kode} name='kode' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Kode Barang" readOnly required />
                                         <input type="text" id="barang_id" onChange={(e)=>setbarang_id(e.target.value)} value={barang_id} name='barang_id'  hidden />
-                                        {errors.kode_barang && <span style={{ color: 'red' }}>{errors.kode_barang}</span>}
+                                        {errors.kode && <span style={{ color: 'red' }}>{errors.kode}</span>}
                                         
                                     </div>
                                     <div className="mb-6">
@@ -345,7 +350,7 @@ const PerlengkapanModal = () => {
                                     </div>
                                     <div className="mb-6">
                                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Harga Pembelian</label>
-                                        <input type="text" id="harga_perlengkapan" onChange={handleHargaPerlengkapanChange} value={harga_perlengkapan} name='kode_barang' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Kode Barang" required />
+                                        <input type="text" id="harga_perlengkapan" onChange={handleHargaPerlengkapanChange} value={harga_perlengkapan} name='kode' className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Kode Barang" required />
                                         {errors.harga_perlengkapan && <span style={{ color: 'red' }}>{errors.harga_perlengkapan}</span>}
                                         
                                     </div>
@@ -366,15 +371,15 @@ const PerlengkapanModal = () => {
                                     </div>
                                     <div className="mb-6">
                                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Pembelian</label>
-                                        <DatePicker selected={tanggal_pembelian} onChange={(date) => settanggal_pembelian(date)} />
+                                        <DatePicker   selected={tanggal_pembelian} onChange={(date) => settanggal_pembelian(date)} type="date" />
                                         
                                     </div>
                                     <div className="mb-6">
                                         
-                                      <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Foto Perlengkapan</label>
-                                      <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="foto_perlengkapan" 
+                                      <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Foto Perlengkapan</label>
+                                      <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="foto_perlengkapan" 
                                        onChange={handleImageChange} type="file"/>
-                                      <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
+                                      <p className="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
 
                                         
                                     </div>
