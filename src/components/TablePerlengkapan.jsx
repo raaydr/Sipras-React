@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState,useEffect,useRef } from "react";
 import axios from "../api/axios";
 import Cookies from "js-cookie";
@@ -34,10 +35,10 @@ const [page, setPage] = useState(1);
 const [pageData, setPageData] = useState(10);
 const [dataPerPage, setDataPerPage] = useState("");
 const [tableRange, setTableRange] = useState([]);
-const [fetchStatus, setFetchStatus] = useState(true)
 
 
-const {setCurrentId,deletedata,setMenuOpen} = usePerlengkapanContext();
+
+const {setCurrentId,deletedata,setMenuOpen,fetchStatus, setFetchStatus} = usePerlengkapanContext();
 
 
 
@@ -60,7 +61,10 @@ const CheckboxValue = (key) => {
   const val = products[indexToUpdate].show  
   return val;
 }
+useEffect(() => {
+  fetchData()
 
+}, []) 
 // Ambil Data dari API
 const fetchData =  () => {
     const token = Cookies.get('tokenku')
