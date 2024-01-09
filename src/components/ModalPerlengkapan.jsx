@@ -22,7 +22,7 @@ const PerlengkapanModal = () => {
     
     const [nama_barang, setnama_barang]= useState("");
     const [kode , setkode ]= useState("");
-    const [foto_perlengkapan , setfoto_perlengkapan ]= useState("");
+    const [foto_perlengkapan , setfoto_perlengkapan ]= useState('');
     const [harga_perlengkapan , setharga_perlengkapan ]= useState(0);
     const [barang_id , setbarang_id ]= useState("");
     const [tipe_barang , settipe_barang ]= useState("");
@@ -38,7 +38,7 @@ const PerlengkapanModal = () => {
     const [barang, setBarang] = useState([])
 
 
-    const [tanggal_pembelian, settanggal_pembelian] = useState("");
+    const [tanggal_pembelian, settanggal_pembelian] = useState(new Date());
     
     const [startDate, setStartDate] = useState(new Date());
 
@@ -225,8 +225,9 @@ const PerlengkapanModal = () => {
       }, [iziStatus]);
 
       const handleImageChange = (event) => {
-        const file = event.target.files[0];
-        //setfoto_perlengkapan(file);
+        
+        setfoto_perlengkapan(event.target.files[0]);
+        console.log(foto_perlengkapan)
       };
     const handleMenuToggle = () => {
         setMenuOpen(!isMenuOpen);
@@ -380,7 +381,7 @@ const PerlengkapanModal = () => {
                                         
                                       <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Foto Perlengkapan</label>
                                       <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="foto_perlengkapan" 
-                                       onChange={handleImageChange} type="file"/>
+                                       type="file" onChange={(e)=>setfoto_perlengkapan(e.target.files[0])} />
                                       <p className="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
 
                                         
